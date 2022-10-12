@@ -2,7 +2,7 @@ const express = require('express')
 const UserRoutes = express.Router()
 const User = require('../models/User')
 const { isNullorUndefinedorEmpty } = require('../utility/util')
-UserRoutes.get('/createuser', async (req, res) => {
+UserRoutes.post('/createuser', async (req, res) => {
     if (isNullorUndefinedorEmpty(req.body.email) && (req.body.isBuyer !== null && req.body.isBuyer !== undefined && req.body.isBuyer === "true" || req.body.isSeller !== null && req.body.isSeller !== undefined && req.body.isSeller === "true")) {
         //Check if User Exists 
         const getuser = await User.findOne({email:req.body.email})
