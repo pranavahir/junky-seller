@@ -76,6 +76,10 @@ const ProductSchema = new Schema({
     },
     leafcategory:{
         type:String
+    },
+    isactive:{
+        type:Boolean,
+        default:true
     }
 },{timestamps:true})
 
