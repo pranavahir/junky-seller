@@ -184,4 +184,82 @@ ProductRoutes.post('/updateproduct', async (req, res) => {
     }
 })
 
+
+ProductRoutes.get('/singleproduct',async(req,res)=>{
+    try{
+        if(isNullorUndefinedorEmpty(req.body.productid)){
+            const getproduct = await Product.aggregate([
+                {
+                    $match:{
+                        _id:req.body.productid
+                    }
+                }
+            ])
+            if(getproduct !== null && getproduct.isactive===true){
+                res.json({
+                    error:null,
+                    data:{
+                        ...getproduct._doc
+                    }
+                })
+            }else{
+                res.json({
+                    error: "Invalid productid",
+                    data: null
+                })
+            }
+            
+        }else{
+            res.json({
+                error: "enter productid",
+                data: null
+            })
+        }
+    }catch(error){
+        res.json({
+            error: "Something Went Wrong",
+            data: null
+        })
+    }
+})
+
+ProductRoutes.get('/getproducts',async(req,res)=>{
+    try{
+        if(isNullorUndefinedorEmpty(req.body.createdBy)){
+            const getproduct = await Product.aggregate([
+                {
+                    $match:{
+                        _id:req.body.createdBy
+                    }
+                }
+            ])
+            if(getproduct !== null){
+                res.json({
+                    error:null,
+                    data:{
+                        ...getproduct._doc
+                    }
+                })
+            }else{
+                res.json({
+                    error: "Invalid createdBy",
+                    data: null
+                })
+            }
+            
+        }else{
+            res.json({
+                error: "enter createdBy",
+                data: null
+            })
+        }
+    }catch(error){
+        res.json({
+            error: "Something Went Wrong",
+            data: null
+        })
+    }
+})
+
+
 module.exports = ProductRoutes;
