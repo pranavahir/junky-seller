@@ -261,5 +261,61 @@ ProductRoutes.get('/getproducts',async(req,res)=>{
     }
 })
 
+ProductRoutes.post('/uploadproducts',async (req,res)=>{
+    try{
+        if(isNullorUndefinedorEmpty(req.body.products) && isNullorUndefinedorEmpty(req.body.userid)){
+            const productsLength = req.body.products.length
+            for(var i = 0;i<productsLength;i++){
+                // console.log(req.body.products[i])
+                const [brandName,title,description,bulletPoints,height,width,length,weight,mainImage,additionalImage1,additionalImage2,additionalImage3,additionalImage4,additionalImage5,price,quantity,category,createdBy] = req.body.products[i]
+                if (isNullorUndefinedorEmpty(brandName) && isNullorUndefinedorEmpty(title) && isNullorUndefinedorEmpty(description) && isNullorUndefinedorEmpty(weight) && isNullorUndefinedorEmpty(mainImage) && isNullorUndefinedorEmpty(additionalImage1) && isNullorUndefinedorEmpty(price) && isNullorUndefinedorEmpty(quantity) && isNullorUndefinedorEmpty(category)) {
+                    // console.log("DONE")
+                    //Check if User Exists
+                        const createProduct = new Product({
+                            brandName: brandName,
+                            title: title,
+                            description: description,
+                            bulletPoints: bulletPoints,
+                            height: height,
+                            width: width,
+                            length: length,
+                            weight: weight,
+                            mainImage: mainImage,
+                            additionalImage1: additionalImage1,
+                            additionalImage2: additionalImage2,
+                            additionalImage3: additionalImage3,
+                            additionalImage4: additionalImage4,
+                            additionalImage5: additionalImage5,
+                            price: price,
+                            quantity: quantity,
+                            category: category,
+                            createdBy: req.body.userid
+                        })
+                        const saveProduct = await createProduct.save()
+                        res.json({
+                            err: null,
+                            data: {
+                                ...saveProduct._doc,
+                                createdAt: saveProduct.createdAt.toISOString(),
+                                updatedAt: saveProduct.updatedAt.toISOString()
+                            }
+                        })
+                    
+                }
+            }
+        }else{
+            res.json({
+                error: "Provide all Mandatory Fields",
+                data: null
+            })
+        }
+    }catch(error){
+        console.log(error)
+        res.json({
+            error: "Something Went Wrong",
+            data: null
+        })
+    }
+})
 
 module.exports = ProductRoutes;
