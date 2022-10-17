@@ -98,18 +98,17 @@ ProductRoutes.post('/deleteproduct', async (req, res) => {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
             const getproduct = await Product.findOne({ _id: req.body.productid })
-            console.log(getproduct, req.body.productid);
+            // console.log(getproduct, req.body.productid);
             if (getproduct !== null) {
-                getproduct.isactive = false
-                const saveProduct = await getproduct.save()
-                res.json({
-                    err: null,
-                    data: {
-                        ...saveProduct._doc,
-                        createdAt: saveProduct.createdAt.toISOString(),
-                        updatedAt: saveProduct.updatedAt.toISOString()
-                    }
-                })
+                const deleteproduct = await Product.updateOne(
+                    {_id:req.body.productid},
+                    {
+                        $set:{
+                            isactive:false
+                        }
+                    }    
+                )
+
             } else {
                 res.json({
                     error: "Product Doesn't Exists",
@@ -137,39 +136,73 @@ ProductRoutes.post('/updateproduct', async (req, res) => {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
             const getproduct = await Product.findOne({ _id: req.body.productid })
             if (getproduct !== null) {
-                getproduct.brandName = req.body.brandName,
-                    getproduct.title = req.body.title,
-                    getproduct.description = req.body.description,
-                    getproduct.bulletPoints = req.body.bulletPoints,
-                    getproduct.height = req.body.height,
-                    getproduct.width = req.body.width,
-                    getproduct.length = req.body.length,
-                    getproduct.weight = req.body.weight,
-                    getproduct.mainImage = req.body.mainImage,
-                    getproduct.additionalImage1 = req.body.additionalImage1,
-                    getproduct.additionalImage2 = req.body.additionalImage2,
-                    getproduct.additionalImage3 = req.body.additionalImage3,
-                    getproduct.additionalImage4 = req.body.additionalImage4,
-                    getproduct.additionalImage5 = req.body.additionalImage5,
-                    getproduct.price = req.body.price,
-                    getproduct.quantity = req.body.quantity,
-                    getproduct.category = req.body.category
-                const saveproduct = getproduct.save()
+                const updateproduct = await Product.updateOne({
+                    _id: req.body.productid
+                }, {
+                    $set: {
+                        brandName: isNullorUndefinedorEmpty(req.body.brandName) ? req.body.brandName : getproduct.brandName,
+                        title: isNullorUndefinedorEmpty(req.body.title) ? req.body.title : getproduct.title,
+                        description: isNullorUndefinedorEmpty(req.body.description) ? req.body.description : getproduct.description,
+                        bulletPoints: isNullorUndefinedorEmpty(req.body.bulletPoints) ? req.body.bulletPoints : getproduct.bulletPoints,
+                        height: isNullorUndefinedorEmpty(req.body.height) ? req.body.height : getproduct.height,
+                        width: isNullorUndefinedorEmpty(req.body.width) ? req.body.width : getproduct.width,
+                        length: isNullorUndefinedorEmpty(req.body.length) ? req.body.length : getproduct.length,
+                        weight: isNullorUndefinedorEmpty(req.body.weight) ? req.body.weight : getproduct.weight,
+                        mainImage: isNullorUndefinedorEmpty(req.body.mainImage) ? req.body.mainImage : getproduct.mainImage,
+                        additionalImage1: isNullorUndefinedorEmpty(req.body.additionalImage1) ? req.body.additionalImage1 : getproduct.additionalImage1,
+                        additionalImage2: isNullorUndefinedorEmpty(req.body.additionalImage2) ? req.body.additionalImage2 : getproduct.additionalImage2,
+                        additionalImage3: isNullorUndefinedorEmpty(req.body.additionalImage3) ? req.body.additionalImage3 : getproduct.additionalImage3,
+                        additionalImage4: isNullorUndefinedorEmpty(req.body.additionalImage4) ? req.body.additionalImage4 : getproduct.additionalImage4,
+                        additionalImage5: isNullorUndefinedorEmpty(req.body.additionalImage5) ? req.body.additionalImage5 : getproduct.additionalImage5,
+                        price: isNullorUndefinedorEmpty(req.body.price) ? req.body.price : getproduct.price,
+                        quantity: isNullorUndefinedorEmpty(req.body.quantity) ? req.body.quantity : getproduct.quantity,
+                        category: isNullorUndefinedorEmpty(req.body.category) ? req.body.category : getproduct.category,
+                        subcategory: isNullorUndefinedorEmpty(req.body.subcategory) ? req.body.subcategory : getproduct.subcategory,
+                        leafcategory: isNullorUndefinedorEmpty(req.body.leafcategory) ? req.body.leafcategory : getproduct.leafcategory
+                    }
+                }
+                )
+                const getupdatedproduct = await Product.findOne({_id:req.body.productid})
                 res.json({
-                    err: null,
-                    data: {
-                        ...saveproduct._doc,
-                        createdAt: saveproduct.createdAt.toISOString(),
-                        updatedAt: saveproduct.updatedAt.toISOString()
+                    error:null,
+                    data:{
+                        ...getupdatedproduct._doc,
+                        createdAt:getupdatedproduct.createdAt.toISOString(),
+                        updatedAt:getupdatedproduct.updatedAt.toISOString()
                     }
                 })
             }else{
+                const createProduct = new Product({
+                    brandName: req.body.brandName,
+                    title: req.body.title,
+                    description: req.body.description,
+                    bulletPoints: req.body.bulletPoints,
+                    height: req.body.height,
+                    width: req.body.width,
+                    length: req.body.length,
+                    weight: req.body.weight,
+                    mainImage: req.body.mainImage,
+                    additionalImage1: req.body.additionalImage1,
+                    additionalImage2: req.body.additionalImage2,
+                    additionalImage3: req.body.additionalImage3,
+                    additionalImage4: req.body.additionalImage4,
+                    additionalImage5: req.body.additionalImage5,
+                    price: req.body.price,
+                    quantity: req.body.quantity,
+                    category: req.body.category,
+                    createdBy: req.body.userid
+                })
+                const saveProduct = await createProduct.save()
                 res.json({
-                    error: "Product Doesn't Exists",
-                    data: null
+                    err: null,
+                    data: {
+                        ...saveProduct._doc,
+                        createdAt: saveProduct.createdAt.toISOString(),
+                        updatedAt: saveProduct.updatedAt.toISOString()
+                    }
                 })
             }
-        }else{
+        } else {
             res.json({
                 error: "Provide all Mandatory Fields",
                 data: null
