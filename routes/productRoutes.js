@@ -265,7 +265,7 @@ ProductRoutes.post('/uploadproducts', async (req, res) => {
     try {
         if (isNullorUndefinedorEmpty(req.body.products) && isNullorUndefinedorEmpty(req.body.userid)) {
             const getuser = await User.findOne({ _id: req.body.userid })
-            console.log(getuser,req.body.userid);
+            // console.log(getuser,req.body.userid);
             if (getuser !== null) {
                 const productsLength = req.body.products.length
                 let validProducts = []
@@ -283,6 +283,7 @@ ProductRoutes.post('/uploadproducts', async (req, res) => {
                         isNullorUndefinedorEmpty(req.body.products[i].quantity) &&
                         isNullorUndefinedorEmpty(req.body.products[i].category)
                     ) {
+                        req.body.products[i].createdBy = req.body.userid
                         validProducts.push(req.body.products[i])
                     } else {
                         invalidProducts.push(req.body.products[i])
@@ -293,12 +294,8 @@ ProductRoutes.post('/uploadproducts', async (req, res) => {
 
                 res.json({
                     error: `inserted ${validProducts.length} products`,
-                    validData: {
-                        ...validProducts[0]._doc
-                    },
-                    invalidData: {
-                        ...invalidProducts._doc
-                    }
+                    validData: validProducts,
+                    invalidData: invalidProducts
                 })
             }else{
                 res.json({
