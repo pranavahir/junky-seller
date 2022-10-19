@@ -261,5 +261,72 @@ ProductRoutes.get('/getproducts',async(req,res)=>{
     }
 })
 
+ProductRoutes.get('/searchsingleproduct',async(req,res)=>{
+    try{
+        if(isNullorUndefinedorEmpty(req.body.productid)){
+            const getProduct = await Product.findOne({_id:req.body.productid})
+            console.log(req.body.productid,getProduct);
+            if(getProduct !== null && getProduct.isactive === true){
+                res.json({
+                    error:null,
+                    data:{
+                        ...getProduct._doc
+                    }
+                })
+            }else{
+                res.json({
+                    error:"product dosen't exist",
+                    data:null
+                })
+            }
+        }else{
+            res.json({
+                error:"enter productid",
+                data:null
+            })
+        }
+    }catch(error){
+        res.json({
+            error:"someting went wrong",
+            data:null
+        })
+    }
+})
+
+
+ProductRoutes.get('/searchproducts',async(req,res)=>{
+    try{
+        if(isNullorUndefinedorEmpty(req.body.searchfield)){
+            // Product.createIndexe({name:"text",title:"text"});
+            const searchResult = await Product.find({
+                $text:{
+                    $search:req.body.searchfield
+                }
+            })
+            if(searchResult !== null){
+                res.json({
+                    error:null,
+                    data:searchResult
+                })
+            }else{
+                res.json({
+                    error:"enter valid search field",
+                    data:null
+                })
+            }
+        }else{
+            res.json({
+                eroor:"enter search field",
+                data:null
+            })
+        }
+    }catch(error){
+        console.log(error);
+        res.json({
+            error:"someting went wrong",
+            data:null
+        })
+    }
+})
 
 module.exports = ProductRoutes;
