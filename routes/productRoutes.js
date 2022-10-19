@@ -98,17 +98,18 @@ ProductRoutes.post('/deleteproduct', async (req, res) => {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
             const getproduct = await Product.findOne({ _id: req.body.productid })
-            // console.log(getproduct, req.body.productid);
+            console.log(getproduct, req.body.productid);
             if (getproduct !== null) {
-                const deleteproduct = await Product.updateOne(
-                    {_id:req.body.productid},
-                    {
-                        $set:{
-                            isactive:false
-                        }
-                    }    
-                )
-
+                getproduct.isactive = false
+                const saveProduct = await getproduct.save()
+                res.json({
+                    err: null,
+                    data: {
+                        ...saveProduct._doc,
+                        createdAt: saveProduct.createdAt.toISOString(),
+                        updatedAt: saveProduct.updatedAt.toISOString()
+                    }
+                })
             } else {
                 res.json({
                     error: "Product Doesn't Exists",
@@ -136,70 +137,36 @@ ProductRoutes.post('/updateproduct', async (req, res) => {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
             const getproduct = await Product.findOne({ _id: req.body.productid })
             if (getproduct !== null) {
-                const updateproduct = await Product.updateOne({
-                    _id: req.body.productid
-                }, {
-                    $set: {
-                        brandName: isNullorUndefinedorEmpty(req.body.brandName) ? req.body.brandName : getproduct.brandName,
-                        title: isNullorUndefinedorEmpty(req.body.title) ? req.body.title : getproduct.title,
-                        description: isNullorUndefinedorEmpty(req.body.description) ? req.body.description : getproduct.description,
-                        bulletPoints: isNullorUndefinedorEmpty(req.body.bulletPoints) ? req.body.bulletPoints : getproduct.bulletPoints,
-                        height: isNullorUndefinedorEmpty(req.body.height) ? req.body.height : getproduct.height,
-                        width: isNullorUndefinedorEmpty(req.body.width) ? req.body.width : getproduct.width,
-                        length: isNullorUndefinedorEmpty(req.body.length) ? req.body.length : getproduct.length,
-                        weight: isNullorUndefinedorEmpty(req.body.weight) ? req.body.weight : getproduct.weight,
-                        mainImage: isNullorUndefinedorEmpty(req.body.mainImage) ? req.body.mainImage : getproduct.mainImage,
-                        additionalImage1: isNullorUndefinedorEmpty(req.body.additionalImage1) ? req.body.additionalImage1 : getproduct.additionalImage1,
-                        additionalImage2: isNullorUndefinedorEmpty(req.body.additionalImage2) ? req.body.additionalImage2 : getproduct.additionalImage2,
-                        additionalImage3: isNullorUndefinedorEmpty(req.body.additionalImage3) ? req.body.additionalImage3 : getproduct.additionalImage3,
-                        additionalImage4: isNullorUndefinedorEmpty(req.body.additionalImage4) ? req.body.additionalImage4 : getproduct.additionalImage4,
-                        additionalImage5: isNullorUndefinedorEmpty(req.body.additionalImage5) ? req.body.additionalImage5 : getproduct.additionalImage5,
-                        price: isNullorUndefinedorEmpty(req.body.price) ? req.body.price : getproduct.price,
-                        quantity: isNullorUndefinedorEmpty(req.body.quantity) ? req.body.quantity : getproduct.quantity,
-                        category: isNullorUndefinedorEmpty(req.body.category) ? req.body.category : getproduct.category,
-                        subcategory: isNullorUndefinedorEmpty(req.body.subcategory) ? req.body.subcategory : getproduct.subcategory,
-                        leafcategory: isNullorUndefinedorEmpty(req.body.leafcategory) ? req.body.leafcategory : getproduct.leafcategory
-                    }
-                }
-                )
-                const getupdatedproduct = await Product.findOne({_id:req.body.productid})
-                res.json({
-                    error:null,
-                    data:{
-                        ...getupdatedproduct._doc,
-                        createdAt:getupdatedproduct.createdAt.toISOString(),
-                        updatedAt:getupdatedproduct.updatedAt.toISOString()
-                    }
-                })
-            }else{
-                const createProduct = new Product({
-                    brandName: req.body.brandName,
-                    title: req.body.title,
-                    description: req.body.description,
-                    bulletPoints: req.body.bulletPoints,
-                    height: req.body.height,
-                    width: req.body.width,
-                    length: req.body.length,
-                    weight: req.body.weight,
-                    mainImage: req.body.mainImage,
-                    additionalImage1: req.body.additionalImage1,
-                    additionalImage2: req.body.additionalImage2,
-                    additionalImage3: req.body.additionalImage3,
-                    additionalImage4: req.body.additionalImage4,
-                    additionalImage5: req.body.additionalImage5,
-                    price: req.body.price,
-                    quantity: req.body.quantity,
-                    category: req.body.category,
-                    createdBy: req.body.userid
-                })
-                const saveProduct = await createProduct.save()
+                getproduct.brandName = req.body.brandName,
+                    getproduct.title = req.body.title,
+                    getproduct.description = req.body.description,
+                    getproduct.bulletPoints = req.body.bulletPoints,
+                    getproduct.height = req.body.height,
+                    getproduct.width = req.body.width,
+                    getproduct.length = req.body.length,
+                    getproduct.weight = req.body.weight,
+                    getproduct.mainImage = req.body.mainImage,
+                    getproduct.additionalImage1 = req.body.additionalImage1,
+                    getproduct.additionalImage2 = req.body.additionalImage2,
+                    getproduct.additionalImage3 = req.body.additionalImage3,
+                    getproduct.additionalImage4 = req.body.additionalImage4,
+                    getproduct.additionalImage5 = req.body.additionalImage5,
+                    getproduct.price = req.body.price,
+                    getproduct.quantity = req.body.quantity,
+                    getproduct.category = req.body.category
+                const saveproduct = getproduct.save()
                 res.json({
                     err: null,
                     data: {
-                        ...saveProduct._doc,
-                        createdAt: saveProduct.createdAt.toISOString(),
-                        updatedAt: saveProduct.updatedAt.toISOString()
+                        ...saveproduct._doc,
+                        createdAt: saveproduct.createdAt.toISOString(),
+                        updatedAt: saveproduct.updatedAt.toISOString()
                     }
+                })
+            } else {
+                res.json({
+                    error: "Product Doesn't Exists",
+                    data: null
                 })
             }
         } else {
@@ -218,37 +185,37 @@ ProductRoutes.post('/updateproduct', async (req, res) => {
 })
 
 
-ProductRoutes.get('/singleproduct',async(req,res)=>{
-    try{
-        if(isNullorUndefinedorEmpty(req.body.productid)){
+ProductRoutes.get('/singleproduct', async (req, res) => {
+    try {
+        if (isNullorUndefinedorEmpty(req.body.productid)) {
             const getproduct = await Product.aggregate([
                 {
-                    $match:{
-                        _id:req.body.productid
+                    $match: {
+                        _id: req.body.productid
                     }
                 }
             ])
-            if(getproduct !== null && getproduct.isactive===true){
+            if (getproduct !== null && getproduct.isactive === true) {
                 res.json({
-                    error:null,
-                    data:{
+                    error: null,
+                    data: {
                         ...getproduct._doc
                     }
                 })
-            }else{
+            } else {
                 res.json({
                     error: "Invalid productid",
                     data: null
                 })
             }
-            
-        }else{
+
+        } else {
             res.json({
                 error: "enter productid",
                 data: null
             })
         }
-    }catch(error){
+    } catch (error) {
         res.json({
             error: "Something Went Wrong",
             data: null
@@ -256,37 +223,37 @@ ProductRoutes.get('/singleproduct',async(req,res)=>{
     }
 })
 
-ProductRoutes.get('/getproducts',async(req,res)=>{
-    try{
-        if(isNullorUndefinedorEmpty(req.body.createdBy)){
+ProductRoutes.get('/getproducts', async (req, res) => {
+    try {
+        if (isNullorUndefinedorEmpty(req.body.createdBy)) {
             const getproduct = await Product.aggregate([
                 {
-                    $match:{
-                        _id:req.body.createdBy
+                    $match: {
+                        _id: req.body.createdBy
                     }
                 }
             ])
-            if(getproduct !== null){
+            if (getproduct !== null) {
                 res.json({
-                    error:null,
-                    data:{
+                    error: null,
+                    data: {
                         ...getproduct._doc
                     }
                 })
-            }else{
+            } else {
                 res.json({
                     error: "Invalid createdBy",
                     data: null
                 })
             }
-            
-        }else{
+
+        } else {
             res.json({
                 error: "enter createdBy",
                 data: null
             })
         }
-    }catch(error){
+    } catch (error) {
         res.json({
             error: "Something Went Wrong",
             data: null
@@ -294,55 +261,55 @@ ProductRoutes.get('/getproducts',async(req,res)=>{
     }
 })
 
-ProductRoutes.post('/uploadproducts',async (req,res)=>{
-    try{
-        if(isNullorUndefinedorEmpty(req.body.products) && isNullorUndefinedorEmpty(req.body.userid)){
-            const productsLength = req.body.products.length
-            for(var i = 0;i<productsLength;i++){
-                // console.log(req.body.products[i])
-                const [brandName,title,description,bulletPoints,height,width,length,weight,mainImage,additionalImage1,additionalImage2,additionalImage3,additionalImage4,additionalImage5,price,quantity,category,createdBy] = req.body.products[i]
-                if (isNullorUndefinedorEmpty(brandName) && isNullorUndefinedorEmpty(title) && isNullorUndefinedorEmpty(description) && isNullorUndefinedorEmpty(weight) && isNullorUndefinedorEmpty(mainImage) && isNullorUndefinedorEmpty(additionalImage1) && isNullorUndefinedorEmpty(price) && isNullorUndefinedorEmpty(quantity) && isNullorUndefinedorEmpty(category)) {
-                    // console.log("DONE")
-                    //Check if User Exists
-                        const createProduct = new Product({
-                            brandName: brandName,
-                            title: title,
-                            description: description,
-                            bulletPoints: bulletPoints,
-                            height: height,
-                            width: width,
-                            length: length,
-                            weight: weight,
-                            mainImage: mainImage,
-                            additionalImage1: additionalImage1,
-                            additionalImage2: additionalImage2,
-                            additionalImage3: additionalImage3,
-                            additionalImage4: additionalImage4,
-                            additionalImage5: additionalImage5,
-                            price: price,
-                            quantity: quantity,
-                            category: category,
-                            createdBy: req.body.userid
-                        })
-                        const saveProduct = await createProduct.save()
-                        res.json({
-                            err: null,
-                            data: {
-                                ...saveProduct._doc,
-                                createdAt: saveProduct.createdAt.toISOString(),
-                                updatedAt: saveProduct.updatedAt.toISOString()
-                            }
-                        })
-                    
+ProductRoutes.post('/uploadproducts', async (req, res) => {
+    try {
+        if (isNullorUndefinedorEmpty(req.body.products) && isNullorUndefinedorEmpty(req.body.userid)) {
+            const getuser = await User.findOne({ _id: req.body.userid })
+            // console.log(getuser,req.body.userid);
+            if (getuser !== null) {
+                const productsLength = req.body.products.length
+                let validProducts = []
+                let invalidProducts = []  
+
+                for (let i = 0; i < productsLength; i++) {
+                    // console.log(req.body.products[i]);
+                    if (isNullorUndefinedorEmpty(req.body.products[i].brandName) &&
+                        isNullorUndefinedorEmpty(req.body.products[i].title) &&
+                        isNullorUndefinedorEmpty(req.body.products[i].description) &&
+                        isNullorUndefinedorEmpty(req.body.products[i].weight) &&
+                        isNullorUndefinedorEmpty(req.body.products[i].mainImage) &&
+                        isNullorUndefinedorEmpty(req.body.products[i].additionalImage1) &&
+                        isNullorUndefinedorEmpty(req.body.products[i].price) &&
+                        isNullorUndefinedorEmpty(req.body.products[i].quantity) &&
+                        isNullorUndefinedorEmpty(req.body.products[i].category)
+                    ) {
+                        req.body.products[i].createdBy = req.body.userid
+                        validProducts.push(req.body.products[i])
+                    } else {
+                        invalidProducts.push(req.body.products[i])
+                    }
                 }
+                const insertProducts = await Product.insertMany(validProducts);
+                // const saveProducts = await insertProducts.save();
+
+                res.json({
+                    error: `inserted ${validProducts.length} products`,
+                    validData: validProducts,
+                    invalidData: invalidProducts
+                })
+            }else{
+                res.json({
+                    error:"enter valid user",
+                    data:null
+                })
             }
-        }else{
+        } else {
             res.json({
                 error: "Provide all Mandatory Fields",
                 data: null
             })
         }
-    }catch(error){
+    } catch (error) {
         console.log(error)
         res.json({
             error: "Something Went Wrong",
