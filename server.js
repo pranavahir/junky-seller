@@ -7,6 +7,7 @@ const UserRoutes = require('./routes/userRoutes')
 const keys = require('./config/key')
 const ProductRoutes = require('./routes/productRoutes')
 const CartRoutes = require('./routes/cartRoutes')
+const OrderedRoutes = require('./routes/orderedRoutes')
 mongoose.connect(keys.URI,{useNewUrlParser:true,useUnifiedTopology:true},(error) => {
     if(error){
         throw error
@@ -19,6 +20,7 @@ app.use(bodyParser.json())
 app.use('/',UserRoutes)
 app.use('/',ProductRoutes);
 app.use('/',CartRoutes);
+app.use('/',OrderedRoutes);
 app.listen(PORT,() => {
     console.log(`Server is Running on http://localhost:${PORT}`)
 })
