@@ -52,12 +52,11 @@ CartRoutes.post('/updatecart',async(req,res)=>{
             const getCart = await Cart.findOne({_id:req.body.cartid})
             if(getCart !== null){
                 const updateCart = await Cart.updateOne({
-                    userid:getCart.userid
+                    cartid:req.body.cartid
                 },
                 {
                     $set:{
-                        quantity:isNullorUndefinedorEmpty(req.body.quantity)?req.body.quantity:getCart.quantity,
-                        productid:isNullorUndefinedorEmpty(req.body.productid)?req.body.productid:getCart.productid,
+                        quantity:isNullorUndefinedorEmpty(req.body.quantity)?req.body.quantity:getCart.quantity
                     }
                 }
                 )
