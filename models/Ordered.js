@@ -13,6 +13,7 @@ Columns:orderreferencenumber,userid,paymentmethod, transactiondetails,productinf
 const OrderedSchema = new Schema({
     orderedreferencenumber:{
         type:String,
+        unique:true,
         default:null
     },
     userid:{
