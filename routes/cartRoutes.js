@@ -48,11 +48,11 @@ CartRoutes.post('/createcart',async(req,res)=>{
 
 CartRoutes.post('/updatecart',async(req,res)=>{
     try{
-        if(isNullorUndefinedorEmpty(req.body.cartid)){
-            const getCart = await Cart.findOne({_id:req.body.cartid})
+        if(isNullorUndefinedorEmpty(req.body.userid)){
+            const getCart = await Cart.findOne({_id:req.body.userid})
             if(getCart !== null){
                 const updateCart = await Cart.updateOne({
-                    cartid:req.body.cartid
+                    userid:req.body.userid
                 },
                 {
                     $set:{
@@ -91,30 +91,19 @@ CartRoutes.post('/updatecart',async(req,res)=>{
 
 CartRoutes.post('/fetchcart',async(req,res)=>{
     try{
-        if(isNullorUndefinedorEmpty(req.body.cartid)){
-            const getCart = await Cart.findOne({_id:req.body.cartid})
-            if(getCart !== null){
-                const fetchCartProduct = await Cart.aggregate([
-                    {
-                        $lookup:{
-                            from:"product",
-                            localField:"productid",
-                            foreignField:"_id",
-                            as:"myCustomResut"
-                        }
+        if(isNullorUndefinedorEmpty(req.body.userid)){
+            const fetchCartProduct = await Cart.aggregate([
+                {   $match:{
+                        userid:req.body.userid
+                    },
+                    $lookup:{
+                        from:"product",
+                        localField:"productid",
+                        foreignField:"_id",
+                        as:"myCustomResut"
                     }
-                ])
-                // console.log(fetchCartProduct)
-                res.json({
-                    error:null,
-                    data:fetchCartProduct
-                })
-            }else{
-                res.json({
-                    error:"enter valid cartid",
-                    data:null
-                })
-            }
+                }
+            ])
         }else{
             res.json({
                 error:"enter cartid",
