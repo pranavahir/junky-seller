@@ -5,6 +5,7 @@ const Cart = require('../models/Cart')
 const Product = require('../models/Product')
 const User = require('../models/User')
 const { isNullorUndefinedorEmpty } = require('../utility/util')
+const ObjectId = mongoose.Types.ObjectId
 
 CartRoutes.post('/createcart', async (req, res) => {
     try {
@@ -93,14 +94,15 @@ CartRoutes.post('/fetchcart', async (req, res) => {
     try {
         if (isNullorUndefinedorEmpty(req.body.userid)) {
             const fetchCartProduct = await Cart.aggregate([
-                {
-                    $match: {
-                        userid: req.body.userid
-                    },
-                    $lookup:
+                {$match: {
+                    userid: ObjectId(req.body.userid),
+                    isactive:true
+                }},
+                {        
+                $lookup:
                     {
                         from: "products",
-                        let:{prodid:"$_id",active:"$isactive"},
+                        let:{prodid:"$_id"},
                         pipeline: [
                             {
                                 $match:
@@ -109,8 +111,8 @@ CartRoutes.post('/fetchcart', async (req, res) => {
                                     {
                                         $and:
                                             [
-                                                { $eq: ["$$prodid", "$productid"] },
-                                                { $eq: ["$$active", "true"] }
+                                                { $eq: ["$productid","$$prodid"] },
+                                                { $eq: ["$isactive", true] }
                                             ]
                                     }
                                 }
@@ -120,7 +122,7 @@ CartRoutes.post('/fetchcart', async (req, res) => {
                     }
                 }
             ])
-            console.log(fetchCartProduct);
+            // console.log(fetchCartProduct);
             res.json({
                 error:null,
                 data:fetchCartProduct
