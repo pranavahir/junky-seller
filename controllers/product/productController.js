@@ -1,10 +1,10 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const ProductRoutes = express.Router()
-const Product = require('../models/Product')
-const User = require('../models/User')
-const productController = require('../controllers/product/productController')
-const { isNullorUndefinedorEmpty } = require('../utility/util')
+const Product = require('../../models/Product')
+const User = require('../../models/User')
+const productController = require('../../controllers/product/productController')
+const { isNullorUndefinedorEmpty } = require('../../utility/util')
 async function createproduct (req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.brandName) && isNullorUndefinedorEmpty(req.body.title) && isNullorUndefinedorEmpty(req.body.description) && isNullorUndefinedorEmpty(req.body.weight) && isNullorUndefinedorEmpty(req.body.mainImage) && isNullorUndefinedorEmpty(req.body.additionalImage1) && isNullorUndefinedorEmpty(req.body.price) && isNullorUndefinedorEmpty(req.body.quantity) && isNullorUndefinedorEmpty(req.body.userid) && isNullorUndefinedorEmpty(req.body.category)) {
