@@ -1,12 +1,12 @@
 const express = require('express')
-const Cart = require('../models/Cart')
-const Ordered = require('../models/Ordered')
-const Product = require('../models/Product')
+const Cart = require('../../models/Cart')
+const Ordered = require('../../models/Ordered')
+const Product = require('../../models/Product')
 const OrderedRoutes = express.Router()
-const User = require('../models/User')
-const ReferenceNumber = require('../models/ReferenceNumber')
-const orderedController = require('../controllers/ordered/orderedController')
-const { isNullorUndefinedorEmpty,fetchFromReferenceNumber } = require('../utility/util')
+const User = require('../../models/User')
+const ReferenceNumber = require('../../models/ReferenceNumber')
+const orderedController = require('../../controllers/ordered/orderedController')
+const { isNullorUndefinedorEmpty,fetchFromReferenceNumber } = require('../../utility/util')
 async function storeordered(req,res){
     try{
         if(isNullorUndefinedorEmpty(req.body.userid) && isNullorUndefinedorEmpty(req.body.paymentmethod) && isNullorUndefinedorEmpty(req.body.transactiondetails) && isNullorUndefinedorEmpty(req.body.additionalcharges) && isNullorUndefinedorEmpty(req.body.additionaldiscount) && isNullorUndefinedorEmpty(req.body.logistics) && isNullorUndefinedorEmpty(req.body.orderstatus)){
