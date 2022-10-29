@@ -14,5 +14,4 @@ CartRoutes.post('/updatecart', cartController.updatecart)
 
 CartRoutes.post('/fetchcart', cartController.fetchcart)
 
-CartRoutes.post('/createupdatecart',cartController.createupdatecart)
 module.exports = CartRoutes;
