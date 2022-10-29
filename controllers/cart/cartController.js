@@ -13,7 +13,13 @@ async function  createcart(req, res)  {
         if (isNullorUndefinedorEmpty(req.body.userid) && isNullorUndefinedorEmpty(req.body.productid)) {
             const getUser = await User.findOne({ _id: req.body.userid })
             const getProduct = await Product.findOne({ _id: req.body.productid })
-            if (getUser !== null && getProduct !== null) {
+            if(req.body.quantity <= 0 && req.body.quantity > getProduct.quantity){
+                res.json({
+                    error:"enter valid quantity",
+                    data:null
+                })
+            }
+            else if (getUser !== null && getProduct !== null ) {
                 const createCart = new Cart({
                     userid: req.body.userid,
                     productid: req.body.productid,
@@ -52,13 +58,14 @@ async  function updatecart (req, res)  {
     try {
         if (isNullorUndefinedorEmpty(req.body.userid)) {
             const getCart = await Cart.findOne({ _id: req.body.userid })
+            const getProduct = await Product.findOne({_id:getCart.productid})
             if (getCart !== null) {
                 const updateCart = await Cart.updateOne({
                     userid: req.body.userid
                 },
                     {
                         $set: {
-                            quantity: isNullorUndefinedorEmpty(req.body.quantity) ? req.body.quantity : getCart.quantity
+                            quantity: (isNullorUndefinedorEmpty(req.body.quantity) && req.body.quantity > 0 && req.body.quantity <= getProduct.quantity )? req.body.quantity : getCart.quantity
                         }
                     }
                 )
@@ -103,7 +110,7 @@ async function fetchcart (req, res)  {
                 $lookup:
                     {
                         from: "products",
-                        let:{prodid:"$_id"},
+                        let:{prodid:"$productid",price:"$products.price"},
                         pipeline: [
                             {
                                 $match:
@@ -112,14 +119,15 @@ async function fetchcart (req, res)  {
                                     {
                                         $and:
                                             [
-                                                { $eq: ["$productid","$$prodid"] },
-                                                { $eq: ["$isactive", true] }
+                                                { $eq: ["$_id","$$prodid"] },
+                                                { $eq: ["$isactive", true] },
+                                                { $gt : [0,"$$price"]}
                                             ]
                                     }
                                 }
                             }
                         ],
-                        as: "comments"
+                        as: "products"
                     }
                 }
             ])
