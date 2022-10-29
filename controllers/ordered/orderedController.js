@@ -43,14 +43,17 @@ async function storeordered(req,res){
                 }
             ])
             let objProducts = []
+            let priceProduct = 0
             for(let i=0;i<fetchCartProduct.length;i++){
                 let {_id,title,brandName,quantity,mainImage,price} = fetchCartProduct[i].products[0]
                 // console.log(_id,title,brandName,quantity,mainImage,price);
                 let productid = _id,producttitle=title,brandname=brandName,productimage=mainImage
                 let orderstatus = req.body.orderstatus,logistics=req.body.logistics
                 let objProductsInfo = {productid,producttitle,brandname,quantity,productimage,orderstatus,logistics,price}
+                priceProduct = priceProduct + quantity*price
                 objProducts.push(objProductsInfo)
             }
+            priceProduct = (priceProduct+req.body.additionalcharges)*(1-(req.body.additionaldiscount)/100)
             console.log(objProducts)
             // console.log(fetchCartProduct);
             const number = await fetchFromReferenceNumber()
@@ -62,7 +65,7 @@ async function storeordered(req,res){
                 productinfo:objProducts,
                 additionalcharges:req.body.additionalcharges,
                 additionaldiscount:req.body.additionaldiscount,
-                ordertotal:100
+                ordertotal:priceProduct
             })
             const saveCreatedOrdered = await createOrdered.save()
             console.log(saveCreatedOrdered);
