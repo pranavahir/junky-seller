@@ -58,7 +58,7 @@ async function storeordered(req,res){
             // console.log(fetchCartProduct);
             const number = await fetchFromReferenceNumber()
             const createOrdered = new Ordered({
-                orderedreferencenumber:number,
+                orderedreferencenumber:`WM-OD-${number}`,
                 userid:req.body.userid,
                 paymentmethod:req.body.paymentmethod,
                 transactiondetails:req.body.transactiondetails,
