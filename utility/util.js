@@ -1,3 +1,5 @@
+const Cart = require("../models/Cart")
+const CartDetailID = require("../models/CartDetailID")
 const ReferenceNumber = require("../models/ReferenceNumber")
 
 const isNullorUndefinedorEmpty = (value) => {
@@ -25,7 +27,27 @@ async function fetchFromReferenceNumber(){
     return number
 }
 
+async function fetchFromCartDetailID(){
+    var number = 0
+    const fetchRef = await CartDetailID.find();
+    if(fetchRef.length === 0){
+        const saveRef = await CartDetailID.insertMany([{cartdetailid:0}])
+        // const saveRefNum = await saveRef.save()
+        // console.log(saveRefNum);
+    }else{
+        number = fetchRef[0].cartdetailid;
+        const id = fetchRef[0]._id;
+        const updateByOne = await CartDetailID.updateOne({_id:id},{$set:{cartdetailid:number+1}})
+        // const saveUpdate = await updateByOne.save()
+        // console.log(saveUpdate);
+    }
+    return number
+}
+
+
+
 module.exports = {
     isNullorUndefinedorEmpty,
-    fetchFromReferenceNumber
+    fetchFromReferenceNumber,
+    fetchFromCartDetailID
 }

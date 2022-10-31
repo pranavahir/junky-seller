@@ -297,11 +297,12 @@ async function searchproducts(req,res){
     try{
         if(isNullorUndefinedorEmpty(req.body.searchfield)){
             // Product.createIndexe({name:"text",title:"text"});
+            var perpage = 10
             const searchResult = await Product.find({
                 $text:{
                     $search:req.body.searchfield
                 }
-            })
+            }).limit(perpage)
             if(searchResult !== null){
                 res.json({
                     error:null,
