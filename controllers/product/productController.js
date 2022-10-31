@@ -98,16 +98,23 @@ async function deleteproduct (req, res)  {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
             const getproduct = await Product.findOne({ _id: req.body.productid })
-            console.log(getproduct, req.body.productid);
+            // console.log(getproduct, req.body.productid);
             if (getproduct !== null) {
                 getproduct.isactive = false
-                const saveProduct = await getproduct.save()
+                const updateDeleteProduct = await Product.updateOne({
+                    _id:req.body.productid
+                },{
+                    $set:{
+                        isactive:false
+                    }
+                })
+                const fetchDeletedProduct = await Product.findOne({_id:req.body.productid})
                 res.json({
                     err: null,
                     data: {
-                        ...saveProduct._doc,
-                        createdAt: saveProduct.createdAt.toISOString(),
-                        updatedAt: saveProduct.updatedAt.toISOString()
+                        ...fetchDeletedProduct._doc,
+                        createdAt: fetchDeletedProduct.createdAt.toISOString(),
+                        updatedAt: fetchDeletedProduct.updatedAt.toISOString()
                     }
                 })
             } else {
