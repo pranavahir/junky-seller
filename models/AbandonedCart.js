@@ -10,8 +10,8 @@ Columns:orderreferencenumber,userid,paymentmethod, transactiondetails,productinf
 2.Create Get Route for fetching order information by orderreferencenumber
 */
 
-const OrderedSchema = new Schema({
-    orderedreferencenumber:{
+const AbandonedCartSchema = new Schema({
+    cartdetailid:{
         type:String,
         unique:true,
         default:null
@@ -72,4 +72,4 @@ const OrderedSchema = new Schema({
     }
 },{timestamps:true})
 
-module.exports = Ordered = mongoose.model("Ordered",OrderedSchema)
+module.exports = AbandonedCart = mongoose.model("AbandonedCart",AbandonedCartSchema)

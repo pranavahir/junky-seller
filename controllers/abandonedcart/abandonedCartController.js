@@ -8,8 +8,9 @@ const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
 const ReferenceNumber = require('../../models/ReferenceNumber')
 const orderedController = require('../../controllers/ordered/orderedController')
-const { isNullorUndefinedorEmpty,fetchFromReferenceNumber } = require('../../utility/util')
-async function storeordered(req,res){
+const { isNullorUndefinedorEmpty,fetchFromReferenceNumber, fetchFromCartDetailID } = require('../../utility/util')
+const AbandonedCart = require('../../models/AbandonedCart')
+async function storeabandonedcart(req,res){
     try{
         if(isNullorUndefinedorEmpty(req.body.userid) && isNullorUndefinedorEmpty(req.body.paymentmethod)&& isNullorUndefinedorEmpty(req.body.email) && isNullorUndefinedorEmpty(req.body.transactiondetails) && isNullorUndefinedorEmpty(req.body.additionalcharges) && isNullorUndefinedorEmpty(req.body.additionaldiscount) && isNullorUndefinedorEmpty(req.body.logistics) && isNullorUndefinedorEmpty(req.body.orderstatus)){
             const fetchCartProduct = await Cart.aggregate([
@@ -56,9 +57,9 @@ async function storeordered(req,res){
             priceProduct = (priceProduct+req.body.additionalcharges)*(1-(req.body.additionaldiscount)/100)
             console.log(objProducts)
             // console.log(fetchCartProduct);
-            const number = await fetchFromReferenceNumber()
-            const createOrdered = new Ordered({
-                orderedreferencenumber:`WM-OD-${number}`,
+            const number = await fetchFromCartDetailID()
+            const createOrdered = new AbandonedCart({
+                cartdetailid:`WM-AC-${number}`,
                 userid:req.body.userid,
                 email:req.body.email,
                 paymentmethod:req.body.paymentmethod,
@@ -88,10 +89,10 @@ async function storeordered(req,res){
     }
 }
 
-async function fetchordered(req,res){
+async function fetchabandonedcart(req,res){
     try{
-        if(isNullorUndefinedorEmpty(req.body.orderedreferencenumber)){
-            const getOrdered = await Ordered.findOne({orderedreferencenumber:req.body.orderedreferencenumber})
+        if(isNullorUndefinedorEmpty(req.body.cartdetailid)){
+            const getOrdered = await AbandonedCart.findOne({cartdetailid:req.body.cartdetailid})
             if(getOrdered !== null){
                 res.json({
                     error:null,
@@ -101,7 +102,7 @@ async function fetchordered(req,res){
                 })
             }else{
                 res.json({
-                    error:"enter valid orderedreferencenumber",
+                    error:"enter valid cartdetailid",
                     data:null
                 })
             }
@@ -120,6 +121,6 @@ async function fetchordered(req,res){
 }
 
 module.exports = {
-    storeordered,
-    fetchordered
+    storeabandonedcart,
+    fetchabandonedcart
 }
