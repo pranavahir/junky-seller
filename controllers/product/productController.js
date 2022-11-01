@@ -10,7 +10,7 @@ async function createproduct (req, res) {
         if (isNullorUndefinedorEmpty(req.body.brandName) && isNullorUndefinedorEmpty(req.body.title) && isNullorUndefinedorEmpty(req.body.description) && isNullorUndefinedorEmpty(req.body.weight) && isNullorUndefinedorEmpty(req.body.mainImage) && isNullorUndefinedorEmpty(req.body.additionalImage1) && isNullorUndefinedorEmpty(req.body.price) && isNullorUndefinedorEmpty(req.body.quantity) && isNullorUndefinedorEmpty(req.body.userid) && isNullorUndefinedorEmpty(req.body.category)) {
             // console.log("DONE")
             //Check if User Exists
-            const getuser = await User.findOne({ _id: req.body.userid })
+            const getuser = await User.findOne({ _id: req.body.userid }).lean()
             if (getuser !== null) {
                 //Store Prouct Info
                 const createProduct = new Product({
@@ -97,7 +97,7 @@ async function createproduct (req, res) {
 async function deleteproduct (req, res)  {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
-            const getproduct = await Product.findOne({ _id: req.body.productid })
+            const getproduct = await Product.findOne({ _id: req.body.productid }).lean()
             // console.log(getproduct, req.body.productid);
             if (getproduct !== null) {
                 getproduct.isactive = false
@@ -108,7 +108,7 @@ async function deleteproduct (req, res)  {
                         isactive:false
                     }
                 })
-                const fetchDeletedProduct = await Product.findOne({_id:req.body.productid})
+                const fetchDeletedProduct = await Product.findOne({_id:req.body.productid}).lean()
                 res.json({
                     err: null,
                     data: {
@@ -141,7 +141,7 @@ async function deleteproduct (req, res)  {
 async function updateproduct (req, res)  {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
-            const getproduct = await Product.findOne({ _id: req.body.productid })
+            const getproduct = await Product.findOne({ _id: req.body.productid }).lean()
             if (getproduct !== null) {
                 getproduct.brandName = req.body.brandName,
                     getproduct.title = req.body.title,
@@ -270,7 +270,7 @@ async function getproducts(req,res){
 async function searchsingleproduct(req,res){
     try{
         if(isNullorUndefinedorEmpty(req.body.productid)){
-            const getProduct = await Product.findOne({_id:req.body.productid})
+            const getProduct = await Product.findOne({_id:req.body.productid}).lean()
             console.log(req.body.productid,getProduct);
             if(getProduct !== null && getProduct.isactive === true){
                 res.json({
@@ -309,7 +309,7 @@ async function searchproducts(req,res){
                 $text:{
                     $search:req.body.searchfield
                 }
-            }).limit(perpage)
+            }).limit(perpage).lean()
             if(searchResult !== null){
                 res.json({
                     error:null,

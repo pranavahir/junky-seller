@@ -92,7 +92,7 @@ async function storeabandonedcart(req,res){
 async function fetchabandonedcart(req,res){
     try{
         if(isNullorUndefinedorEmpty(req.body.cartdetailid)){
-            const getOrdered = await AbandonedCart.findOne({cartdetailid:req.body.cartdetailid})
+            const getOrdered = await AbandonedCart.findOne({cartdetailid:req.body.cartdetailid}).lean()
             if(getOrdered !== null){
                 res.json({
                     error:null,

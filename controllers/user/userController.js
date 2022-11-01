@@ -7,7 +7,7 @@ async function createuser (req, res)  {
     try{
         if (isNullorUndefinedorEmpty(req.body.email) && (req.body.isBuyer !== null && req.body.isBuyer !== undefined && req.body.isBuyer === "true" || req.body.isSeller !== null && req.body.isSeller !== undefined && req.body.isSeller === "true")) {
             //Check if User Exists 
-            const getuser = await User.findOne({email:req.body.email})
+            const getuser = await User.findOne({email:req.body.email}).lean()
             if(getuser !== null){
                 //User Exists Update User
                 const updateuser = await User.updateOne(
@@ -27,7 +27,7 @@ async function createuser (req, res)  {
                         }
                     }
                 )
-                const getupdateduser = await User.findOne({email:getuser.email})
+                const getupdateduser = await User.findOne({email:getuser.email}).lean()
                 res.json({
                     error: null,
                     data: {
