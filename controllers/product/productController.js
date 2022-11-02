@@ -141,26 +141,36 @@ async function deleteproduct (req, res)  {
 async function updateproduct (req, res)  {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
+
+
             const getproduct = await Product.findOne({ _id: req.body.productid }).lean()
             if (getproduct !== null) {
-                getproduct.brandName = req.body.brandName,
-                    getproduct.title = req.body.title,
-                    getproduct.description = req.body.description,
-                    getproduct.bulletPoints = req.body.bulletPoints,
-                    getproduct.height = req.body.height,
-                    getproduct.width = req.body.width,
-                    getproduct.length = req.body.length,
-                    getproduct.weight = req.body.weight,
-                    getproduct.mainImage = req.body.mainImage,
-                    getproduct.additionalImage1 = req.body.additionalImage1,
-                    getproduct.additionalImage2 = req.body.additionalImage2,
-                    getproduct.additionalImage3 = req.body.additionalImage3,
-                    getproduct.additionalImage4 = req.body.additionalImage4,
-                    getproduct.additionalImage5 = req.body.additionalImage5,
-                    getproduct.price = req.body.price,
-                    getproduct.quantity = req.body.quantity,
-                    getproduct.category = req.body.category
-                const saveproduct = getproduct.save()
+                const updateproduct = await Product.updateOne({
+                    _id: req.body.productid
+                }, {
+                    $set: {
+                        quantity: isNullorUndefinedorEmpty(req.body.quantity) ? req.body.quantity : getproduct.quantity,
+                        brandName: isNullorUndefinedorEmpty(req.body.brandName) ? req.body.brandName : getproduct.brandName,
+                        title: isNullorUndefinedorEmpty(req.body.title) ? req.body.title : getproduct.title,
+                        description: isNullorUndefinedorEmpty(req.body.description) ? req.body.description : getproduct.description,
+                        bulletPoints: isNullorUndefinedorEmpty(req.body.bulletPoints) ? req.body.bulletPoints : getproduct.bulletPoint,
+                        height: isNullorUndefinedorEmpty(req.body.height) ? req.body.height : getproduct.height,
+                        width: isNullorUndefinedorEmpty(req.body.width) ? req.body.width : getproduct.width,
+                        length: isNullorUndefinedorEmpty(req.body.length) ? req.body.length : getproduct.length,
+                        weight: isNullorUndefinedorEmpty(req.body.weight) ? req.body.weight : getproduct.weight,
+                        mainImage: isNullorUndefinedorEmpty(req.body.mainImage) ? req.body.mainImage : getproduct.mainImage,
+                        additionalImage1: isNullorUndefinedorEmpty(req.body.additionalImage1) ? req.body.additionalImage1 : getproduct.additionalImage1,
+                        additionalImage2: isNullorUndefinedorEmpty(req.body.additionalImage2) ? req.body.additionalImage2 : getproduct.additionalImage2,
+                        additionalImage3: isNullorUndefinedorEmpty(req.body.additionalImage3) ? req.body.additionalImage3 : getproduct.additionalImage3,
+                        additionalImage4: isNullorUndefinedorEmpty(req.body.additionalImage4) ? req.body.additionalImage4 : getproduct.additionalImage4,
+                        additionalImage5: isNullorUndefinedorEmpty(req.body.additionalImage5) ? req.body.additionalImage5 : getproduct.additionalImage5,
+                        price: isNullorUndefinedorEmpty(req.body.price) ? req.body.price : getproduct.price,
+                        quantity: isNullorUndefinedorEmpty(req.body.quantity) ? req.body.quantity : getproduct.quantity,
+                        category: isNullorUndefinedorEmpty(req.body.category) ? req.body.category : getproduct.category
+                    }
+                })
+
+            
                 res.json({
                     err: null,
                     data: {
