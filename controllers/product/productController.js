@@ -138,10 +138,9 @@ async function deleteproduct (req, res)  {
     }
 }
 
-async function updateproduct (req, res)  {
+async function updateproduct(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
-
 
             const getproduct = await Product.findOne({ _id: req.body.productid }).lean()
             if (getproduct !== null) {
@@ -170,7 +169,7 @@ async function updateproduct (req, res)  {
                     }
                 })
 
-            
+                const saveproduct = await Product.findOne({ _id: req.body.productid })
                 res.json({
                     err: null,
                     data: {
@@ -179,13 +178,13 @@ async function updateproduct (req, res)  {
                         updatedAt: saveproduct.updatedAt.toISOString()
                     }
                 })
-            }else{
+            } else {
                 res.json({
                     error: "Product Doesn't Exists",
                     data: null
                 })
             }
-        }else{
+        } else {
             res.json({
                 error: "Provide all Mandatory Fields",
                 data: null
@@ -199,6 +198,7 @@ async function updateproduct (req, res)  {
         })
     }
 }
+
 
 
 async function singleproduct(req,res){
