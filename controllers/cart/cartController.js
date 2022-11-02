@@ -56,7 +56,7 @@ async function updatecart(req, res) {
                 res.json({
                     error: null,
                     data: {
-                        ...getUpdatedCart._doc,
+                        ...getUpdatedCart,
                         createdAt: getUpdatedCart.createdAt.toISOString(),
                         updatedAt: getUpdatedCart.updatedAt.toISOString()
                     }

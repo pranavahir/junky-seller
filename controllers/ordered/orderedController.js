@@ -96,7 +96,7 @@ async function fetchordered(req,res){
                 res.json({
                     error:null,
                     data:{
-                        ...getOrdered._doc
+                        ...getOrdered
                     }
                 })
             }else{

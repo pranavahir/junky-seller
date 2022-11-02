@@ -97,7 +97,7 @@ async function fetchabandonedcart(req,res){
                 res.json({
                     error:null,
                     data:{
-                        ...getOrdered._doc
+                        ...getOrdered
                     }
                 })
             }else{

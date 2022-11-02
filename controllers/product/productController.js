@@ -112,7 +112,7 @@ async function deleteproduct (req, res)  {
                 res.json({
                     err: null,
                     data: {
-                        ...fetchDeletedProduct._doc,
+                        ...fetchDeletedProduct,
                         createdAt: fetchDeletedProduct.createdAt.toISOString(),
                         updatedAt: fetchDeletedProduct.updatedAt.toISOString()
                     }
