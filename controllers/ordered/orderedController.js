@@ -91,12 +91,12 @@ async function storeordered(req,res){
 async function fetchordered(req,res){
     try{
         if(isNullorUndefinedorEmpty(req.body.orderedreferencenumber)){
-            const getOrdered = await Ordered.findOne({orderedreferencenumber:req.body.orderedreferencenumber})
+            const getOrdered = await Ordered.findOne({orderedreferencenumber:req.body.orderedreferencenumber}).lean()
             if(getOrdered !== null){
                 res.json({
                     error:null,
                     data:{
-                        ...getOrdered._doc
+                        ...getOrdered
                     }
                 })
             }else{
