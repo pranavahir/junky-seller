@@ -1,8 +1,16 @@
-const express = require('express')
 const mongoose = require('mongoose')
-const OrderedHistoryRoutes = express.Router()
-const orderedHistoryController = require('../controllers/orderedHistory/orderedHistoryController')
+const Schema = mongoose.Schema
+const ObjectId = Schema.ObjectId
 
-OrderedHistoryRoutes.post('/storeuserhistory',orderedHistoryController.storeuserhistory)
+const OrderedHistorySchema = new Schema({
+    userid:{
+        type:ObjectId
+    },
+    orderedinfo:[{
+        orderedreferencenumber:{
+            type:String
+        }
+    }]
+},{timestamps:true})
 
-module.exports = OrderedHistoryRoutes
+module.exports = OrderedHistory = mongoose.model('OrderedHistory',OrderedHistorySchema)
