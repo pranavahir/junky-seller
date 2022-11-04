@@ -5,7 +5,7 @@ const Product = require('../../models/Product')
 const User = require('../../models/User')
 const productController = require('../../controllers/product/productController')
 const { isNullorUndefinedorEmpty } = require('../../utility/util')
-async function createproduct (req, res) {
+async function createproduct(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.brandName) && isNullorUndefinedorEmpty(req.body.title) && isNullorUndefinedorEmpty(req.body.description) && isNullorUndefinedorEmpty(req.body.weight) && isNullorUndefinedorEmpty(req.body.mainImage) && isNullorUndefinedorEmpty(req.body.additionalImage1) && isNullorUndefinedorEmpty(req.body.price) && isNullorUndefinedorEmpty(req.body.quantity) && isNullorUndefinedorEmpty(req.body.userid) && isNullorUndefinedorEmpty(req.body.category)) {
             // console.log("DONE")
@@ -42,22 +42,19 @@ async function createproduct (req, res) {
                         updatedAt: saveProduct.updatedAt.toISOString()
                     }
                 })
-            }
-            else {
+            } else {
                 res.json({
                     error: "User Doesn't Exists",
                     data: null
                 })
             }
-        }
-        else {
+        } else {
             res.json({
                 error: "Provide all Mandatory Fields",
                 data: null
             })
         }
-    }
-    catch (error) {
+    } catch (error) {
         console.log(error)
         res.json({
             error: "Something Went Wrong",
@@ -94,21 +91,21 @@ async function createproduct (req, res) {
     // })
 }
 
-async function deleteproduct (req, res)  {
+async function deleteproduct(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
             const getproduct = await Product.findOne({ _id: req.body.productid }).lean()
-            // console.log(getproduct, req.body.productid);
+                // console.log(getproduct, req.body.productid);
             if (getproduct !== null) {
                 getproduct.isactive = false
                 const updateDeleteProduct = await Product.updateOne({
-                    _id:req.body.productid
-                },{
-                    $set:{
-                        isactive:false
+                    _id: req.body.productid
+                }, {
+                    $set: {
+                        isactive: false
                     }
                 })
-                const fetchDeletedProduct = await Product.findOne({_id:req.body.productid}).lean()
+                const fetchDeletedProduct = await Product.findOne({ _id: req.body.productid }).lean()
                 res.json({
                     err: null,
                     data: {
@@ -201,37 +198,35 @@ async function updateproduct(req, res) {
 
 
 
-async function singleproduct(req,res){
-    try{
-        if(isNullorUndefinedorEmpty(req.body.productid)){
-            const getproduct = await Product.aggregate([
-                {
-                    $match:{
-                        _id:req.body.productid
-                    }
+async function singleproduct(req, res) {
+    try {
+        if (isNullorUndefinedorEmpty(req.body.productid)) {
+            const getproduct = await Product.aggregate([{
+                $match: {
+                    _id: req.body.productid
                 }
-            ])
-            if(getproduct !== null && getproduct.isactive===true){
+            }])
+            if (getproduct !== null && getproduct.isactive === true) {
                 res.json({
-                    error:null,
-                    data:{
+                    error: null,
+                    data: {
                         ...getproduct._doc
                     }
                 })
-            }else{
+            } else {
                 res.json({
                     error: "Invalid productid",
                     data: null
                 })
             }
-            
-        }else{
+
+        } else {
             res.json({
                 error: "enter productid",
                 data: null
             })
         }
-    }catch(error){
+    } catch (error) {
         res.json({
             error: "Something Went Wrong",
             data: null
@@ -239,37 +234,35 @@ async function singleproduct(req,res){
     }
 }
 
-async function getproducts(req,res){
-    try{
-        if(isNullorUndefinedorEmpty(req.body.createdBy)){
-            const getproduct = await Product.aggregate([
-                {
-                    $match:{
-                        _id:req.body.createdBy
-                    }
+async function getproducts(req, res) {
+    try {
+        if (isNullorUndefinedorEmpty(req.body.createdBy)) {
+            const getproduct = await Product.aggregate([{
+                $match: {
+                    _id: req.body.createdBy
                 }
-            ])
-            if(getproduct !== null){
+            }])
+            if (getproduct !== null) {
                 res.json({
-                    error:null,
-                    data:{
+                    error: null,
+                    data: {
                         ...getproduct._doc
                     }
                 })
-            }else{
+            } else {
                 res.json({
                     error: "Invalid createdBy",
                     data: null
                 })
             }
-            
-        }else{
+
+        } else {
             res.json({
                 error: "enter createdBy",
                 data: null
             })
         }
-    }catch(error){
+    } catch (error) {
         res.json({
             error: "Something Went Wrong",
             data: null
@@ -277,71 +270,71 @@ async function getproducts(req,res){
     }
 }
 
-async function searchsingleproduct(req,res){
-    try{
-        if(isNullorUndefinedorEmpty(req.body.productid)){
-            const getProduct = await Product.findOne({_id:req.body.productid}).lean()
-            console.log(req.body.productid,getProduct);
-            if(getProduct !== null && getProduct.isactive === true){
+async function searchsingleproduct(req, res) {
+    try {
+        if (isNullorUndefinedorEmpty(req.body.productid)) {
+            const getProduct = await Product.findOne({ _id: req.body.productid }).lean()
+            console.log(req.body.productid, getProduct);
+            if (getProduct !== null && getProduct.isactive === true) {
                 res.json({
-                    error:null,
-                    data:{
+                    error: null,
+                    data: {
                         ...getProduct._doc
                     }
                 })
-            }else{
+            } else {
                 res.json({
-                    error:"product dosen't exist",
-                    data:null
+                    error: "product dosen't exist",
+                    data: null
                 })
             }
-        }else{
+        } else {
             res.json({
-                error:"enter productid",
-                data:null
+                error: "enter productid",
+                data: null
             })
         }
-    }catch(error){
+    } catch (error) {
         res.json({
-            error:"someting went wrong",
-            data:null
+            error: "someting went wrong",
+            data: null
         })
     }
 }
 
 
-async function searchproducts(req,res){
-    try{
-        if(isNullorUndefinedorEmpty(req.body.searchfield)){
+async function searchproducts(req, res) {
+    try {
+        if (isNullorUndefinedorEmpty(req.body.searchfield)) {
             // Product.createIndexe({name:"text",title:"text"});
             var perpage = 10
             const searchResult = await Product.find({
-                $text:{
-                    $search:req.body.searchfield
+                $text: {
+                    $search: req.body.searchfield
                 }
             }).limit(perpage).lean()
-            if(searchResult !== null){
+            if (searchResult !== null) {
                 res.json({
-                    error:null,
-                    data:searchResult
+                    error: null,
+                    data: searchResult
                 })
-            }else{
+            } else {
                 res.json({
-                    error:"enter valid search field",
-                    data:null
+                    error: "enter valid search field",
+                    data: null
                 })
             }
-        }else{
+        } else {
             res.json({
-                eroor:"enter search field",
-                data:null
+                eroor: "enter search field",
+                data: null
             })
         }
-    }catch(error){
+    } catch (error) {
         console.log(error);
         res.json({
-            error:"someting went wrong",
-            data:null
+            error: "someting went wrong",
+            data: null
         })
     }
 }
