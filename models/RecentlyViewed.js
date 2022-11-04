@@ -10,6 +10,6 @@ const RecentlyViewedSchema = new Schema({
         type: ObjectId
     }
 
-}, { timestamps: true})
+}, { timestamps: true })
 
-module.exports = = mongoose.model('RecentlyViewedSchema', RecentlyViewedSchema)
+module.exports = RecentlyViewed = mongoose.model('RecentlyViewedSchema', RecentlyViewedSchema)
