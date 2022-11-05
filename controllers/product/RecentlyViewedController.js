@@ -61,3 +61,6 @@ async function recentlyviewedproduct(req, res) {
         })
     }
 }
+module.exports = {
+    recentlyviewedproduct
+}
