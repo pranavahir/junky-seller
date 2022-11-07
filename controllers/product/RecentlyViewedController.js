@@ -1,11 +1,14 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const ProductRoutes = express.Router()
+const RecentlyViewedRoutes = express.Router()
 const Product = require('../../models/Product')
+
 const User = require('../../models/User')
 const RecentlyViewed = require('../../models/RecentlyViewed')
 const RecentlyViewedController = require('../../controllers/product/RecentlyViewedController')
 const { isNullorUndefinedorEmpty } = require('../../utility/util')
+const ObjectId = mongoose.Types.ObjectId
+
 
 async function recentlyviewedproduct(req, res) {
     try {
@@ -47,7 +50,7 @@ async function recentlyviewedproduct(req, res) {
                     data: {
                         ...saveRecentlyViewed._doc,
                         createdAt: saveRecentlyViewed.createdAt.toISOString(),
-                        updatedAt: saveRecentlyViewedt.updatedAt.toISOString()
+                        updatedAt: saveRecentlyViewed.updatedAt.toISOString()
                     }
                 })
             }
@@ -61,6 +64,48 @@ async function recentlyviewedproduct(req, res) {
         })
     }
 }
+
+async function fetchrecentlyviewed(req, res) {
+    try {
+        if (isNullorUndefinedorEmpty(req.body.userid)) {
+            const fetchrecently = await RecentlyViewed.aggregate([{
+                        $match: {
+                            userid: ObjectId(req.body.userid)
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "products",
+                            let: { prodid: "$productid" },
+
+                            pipeline: [{
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ["$_id", "$$prodid"] },
+                                        ]
+                                    }
+                                }
+                            }],
+                            as: "products"
+                        }
+                    }
+                ])
+                //console.log(fetchrecently[0]);
+            res.json({
+                error: null,
+                data: fetchrecently
+            })
+        }
+    } catch (error) {
+        res.json({
+            error: "something went wrong",
+            data: null
+        })
+    }
+}
+
 module.exports = {
-    recentlyviewedproduct
+    recentlyviewedproduct,
+    fetchrecentlyviewed
 }
