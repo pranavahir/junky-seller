@@ -11,48 +11,45 @@ const ObjectId = mongoose.Types.ObjectId
 async function updatecart(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.userid) && isNullorUndefinedorEmpty(req.body.quantity) && isNullorUndefinedorEmpty(req.body.productid)) {
-            const getCart = await Cart.findOne({ userid: req.body.userid,productid:req.body.productid }).lean()
-            // for quantity validation required to check whether entered quantity is greater to product quantity or not
+            const getCart = await Cart.findOne({ userid: req.body.userid, productid: req.body.productid }).lean()
+                // for quantity validation required to check whether entered quantity is greater to product quantity or not
             const getProduct = await Product.findOne({ _id: req.body.productid }).lean()
-            // const updateProduct = await Product.updateOne({
-            //     _id:getCart.productid
-            // },
-            //     {
-            //         $set: {
-            //             quantity: 100
-            //         }
-            //     }
-            // )
+                // const updateProduct = await Product.updateOne({
+                //     _id:getCart.productid
+                // },
+                //     {
+                //         $set: {
+                //             quantity: 100
+                //         }
+                //     }
+                // )
             if (!(req.body.quantity > 0 && req.body.quantity <= getProduct.quantity)) {
                 res.json({
                     error: "enter valid quantity",
                     data: null
                 })
 
-            }
-            else if (getCart !== null) {
+            } else if (getCart !== null) {
                 const updateCart = await Cart.updateOne({
-                    userid: req.body.userid,
-                    productid:req.body.productid
-                },
-                    {
+                        userid: req.body.userid,
+                        productid: req.body.productid
+                    }, {
                         $set: {
                             quantity: req.body.quantity
                         }
-                    }
-                )
-                // console.log(updateCart);
-                // const updateProduct = await Product.updateOne({
-                //     _id: getCart.productid
-                // },
-                //     {
-                //         $set: {
-                //             quantity: getProduct.quantity - req.body.quantity
-                //         }
-                //     }
-                // )
-                // console.log(updateProduct);
-                const getUpdatedCart = await Cart.findOne({ userid: req.body.userid,productid:req.body.productid }).lean()
+                    })
+                    // console.log(updateCart);
+                    // const updateProduct = await Product.updateOne({
+                    //     _id: getCart.productid
+                    // },
+                    //     {
+                    //         $set: {
+                    //             quantity: getProduct.quantity - req.body.quantity
+                    //         }
+                    //     }
+                    // )
+                    // console.log(updateProduct);
+                const getUpdatedCart = await Cart.findOne({ userid: req.body.userid, productid: req.body.productid }).lean()
                 res.json({
                     error: null,
                     data: {
@@ -84,39 +81,32 @@ async function updatecart(req, res) {
 async function fetchcart(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.userid)) {
-            const fetchCartProduct = await Cart.aggregate([
-                {
-                    $match: {
-                        userid: ObjectId(req.body.userid),
-                        isactive: true
-                    }
-                },
-                {
-                    $lookup:
+            const fetchCartProduct = await Cart.aggregate([{
+                        $match: {
+                            userid: ObjectId(req.body.userid),
+                            isactive: true
+                        }
+                    },
                     {
-                        from: "products",
-                        let: { prodid: "$productid", price: "$products.price" },
-                        pipeline: [
-                            {
-                                $match:
-                                {
-                                    $expr:
-                                    {
-                                        $and:
-                                            [
-                                                { $eq: ["$_id", "$$prodid"] },
-                                                { $eq: ["$isactive", true] },
-                                                { $gt: [0, "$$price"] }
-                                            ]
+                        $lookup: {
+                            from: "products",
+                            let: { prodid: "$productid", price: "$products.price" },
+                            pipeline: [{
+                                $match: {
+                                    $expr: {
+                                        $and: [
+                                            { $eq: ["$_id", "$$prodid"] },
+                                            { $eq: ["$isactive", true] },
+                                            { $gt: [0, "$$price"] }
+                                        ]
                                     }
                                 }
-                            }
-                        ],
-                        as: "products"
+                            }],
+                            as: "products"
+                        }
                     }
-                }
-            ])
-            // console.log(fetchCartProduct);
+                ])
+                // console.log(fetchCartProduct);
             res.json({
                 error: null,
                 data: fetchCartProduct
@@ -135,31 +125,31 @@ async function fetchcart(req, res) {
     }
 }
 
+
+
+
 async function createcart(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.userid) && isNullorUndefinedorEmpty(req.body.productid) && isNullorUndefinedorEmpty(req.body.quantity)) {
             const findCart = await Cart.findOne({ userid: req.body.userid, productid: req.body.productid }).lean()
             const findProduct = await Product.findOne({ _id: req.body.productid }).lean()
             const findUser = await User.findOne({ _id: req.body.userid }).lean()
-            // console.log(findProduct);
+                // console.log(findProduct);
             if (req.body.quantity <= 0 || req.body.quantity > findProduct.quantity) {
                 res.json({
                     error: "enter valid quantity",
                     data: null
                 })
-            }else if (findCart !== null) {
+            } else if (findCart !== null) {
 
-                const updateCart = await Cart.updateOne(
-                    {
-                        userid: req.body.userid,
-                        productid: req.body.productid
-                    },
-                    {
-                        $set: {
-                            quantity: req.body.quantity
-                        }
+                const updateCart = await Cart.updateOne({
+                    userid: req.body.userid,
+                    productid: req.body.productid
+                }, {
+                    $set: {
+                        quantity: req.body.quantity
                     }
-                )
+                })
                 const responseCart = await Cart.findOne({ userid: req.body.userid, productid: req.body.productid })
                 res.json({
                     error: null,
@@ -177,14 +167,14 @@ async function createcart(req, res) {
                     error: null,
                     data: {
                         ...saveCart._doc,
-                        createdAt:saveCart.createdAt.toISOString(),
-                        updatedAt:saveCart.updatedAt.toISOString(),
+                        createdAt: saveCart.createdAt.toISOString(),
+                        updatedAt: saveCart.updatedAt.toISOString(),
                     }
                 })
-            }else{
+            } else {
                 res.json({
-                    error:"enter valid userid or productid",
-                    data:null
+                    error: "enter valid userid or productid",
+                    data: null
                 })
             }
         } else {

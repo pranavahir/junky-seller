@@ -8,23 +8,25 @@ const keys = require('./config/key')
 const ProductRoutes = require('./routes/productRoutes')
 const CartRoutes = require('./routes/cartRoutes')
 const OrderedRoutes = require('./routes/orderedRoutes')
+const RecentlyViewedRoutes = require('./routes/recentlyViewedRoutes')
 const AbandonedCartRoutes = require('./routes/abandonedCartRoutes')
 const OrderedHistoryRoutes = require('./routes/orderedHistoryRoutes')
-mongoose.connect(keys.URI,{useNewUrlParser:true,useUnifiedTopology:true},(error) => {
-    if(error){
+mongoose.connect(keys.URI, { useNewUrlParser: true, useUnifiedTopology: true }, (error) => {
+    if (error) {
         throw error
-    }else{
+    } else {
         console.log("MongoDB Connected")
     }
 })
-app.use(bodyParser.urlencoded({extended:false}))
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-app.use('/',UserRoutes)
-app.use('/',ProductRoutes);
-app.use('/',CartRoutes);
-app.use('/',OrderedRoutes);
-app.use('/',AbandonedCartRoutes)
-app.use('/',OrderedHistoryRoutes)
-app.listen(PORT,() => {
+app.use('/', UserRoutes)
+app.use('/', ProductRoutes);
+app.use('/', CartRoutes);
+app.use('/', OrderedRoutes);
+app.use('/', AbandonedCartRoutes)
+app.use('/', OrderedHistoryRoutes)
+app.use('/', RecentlyViewedRoutes)
+app.listen(PORT, () => {
     console.log(`Server is Running on http://localhost:${PORT}`)
 })
