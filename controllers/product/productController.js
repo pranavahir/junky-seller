@@ -31,7 +31,9 @@ async function createproduct(req, res) {
                     price: req.body.price,
                     quantity: req.body.quantity,
                     category: req.body.category,
-                    createdBy: req.body.userid
+                    createdBy: req.body.userid,
+                    subcategory: req.body.subcategory,
+                    leafcategory: req.body.leafcategory
                 })
                 const saveProduct = await createProduct.save()
                 res.json({
@@ -339,6 +341,40 @@ async function searchproducts(req, res) {
     }
 }
 
+async function fetchproductinformation(req, res) {
+    try {
+        if (isNullorUndefinedorEmpty(req.body.category)) {
+
+            console.log("entering")
+            console.log(req.body)
+            const matchObject = {}
+            matchObject.category = req.body.category
+            if (isNullorUndefinedorEmpty(req.body.subcategory)) {
+                matchObject.subcategory = req.body.subcategory
+            }
+            if (isNullorUndefinedorEmpty(req.body.leafcategory)) {
+                matchObject.leafcategory = req.body.leafcategory
+            }
+            console.log(matchObject)
+
+            const fetchproductinformation = await Product.aggregate([{
+                    $match: matchObject
+                }])
+                //console.log(fetchproductinformation);
+            res.json({
+                error: null,
+                data: fetchproductinformation
+            })
+        }
+    } catch (error) {
+        res.json({
+            error: "something went wrong",
+            data: null
+        })
+    }
+}
+
+
 module.exports = {
     createproduct,
     deleteproduct,
@@ -346,5 +382,6 @@ module.exports = {
     getproducts,
     searchproducts,
     searchsingleproduct,
-    updateproduct
+    updateproduct,
+    fetchproductinformation
 }

@@ -3,86 +3,88 @@ const Schema = mongoose.Schema
 ObjectId = Schema.ObjectId;
 
 const ProductSchema = new Schema({
-    brandName:{
-        type:String,
-        default:null
+    brandName: {
+        type: String,
+        default: null
     },
-    title:{
-        type:String,
-        default:null
+    title: {
+        type: String,
+        default: null
     },
-    description:{
-        type:String,
-        default:null
+    description: {
+        type: String,
+        default: null
     },
-    bulletPoints:{
-        type:String,
-        default:null
+    bulletPoints: {
+        type: String,
+        default: null
     },
-    height:{
-        type:Number,
-        default:null
+    height: {
+        type: Number,
+        default: null
     },
-    width:{
-        type:Number,
-        default:null
+    width: {
+        type: Number,
+        default: null
     },
-    length:{
-        type:Number,
-        default:null
+    length: {
+        type: Number,
+        default: null
     },
-    weight:{
-        type:Number,
-        default:null
+    weight: {
+        type: Number,
+        default: null
     },
-    mainImage:{
-        type:String,
-        default:null
+    mainImage: {
+        type: String,
+        default: null
     },
-    additionalImage1:{
-        type:String,
-        default:null
+    additionalImage1: {
+        type: String,
+        default: null
     },
-    additionalImage2:{
-        type:String,
-        default:null
+    additionalImage2: {
+        type: String,
+        default: null
     },
-    additionalImage3:{
-        type:String,
-        default:null
+    additionalImage3: {
+        type: String,
+        default: null
     },
-    additionalImage4:{
-        type:String,
-        default:null
+    additionalImage4: {
+        type: String,
+        default: null
     },
-    additionalImage5:{
-        type:String,
-        default:null
+    additionalImage5: {
+        type: String,
+        default: null
     },
-    createdBy:{
-        type:ObjectId,
+    createdBy: {
+        type: ObjectId,
     },
-    price:{
-        type:Number,
+    price: {
+        type: Number,
     },
-    quantity:{
-        type:Number,
+    quantity: {
+        type: Number,
     },
-    category:{
-        type:String
+    category: {
+        type: String
     },
-    subcategory:{
-        type:String
+    subcategory: {
+        type: String,
+        default: null
     },
-    leafcategory:{
-        type:String
+    leafcategory: {
+        type: String,
+        default: null
     },
-    isactive:{
-        type:Boolean,
-        default:true
+    isactive: {
+        type: Boolean,
+        default: true
     }
-},{timestamps:true})
+}, { timestamps: true })
 
-ProductSchema.index({title:"text"})
+ProductSchema.index({ title: "text" })
 
-module.exports = Product = mongoose.model("Product",ProductSchema);
+module.exports = Product = mongoose.model("Product", ProductSchema);
