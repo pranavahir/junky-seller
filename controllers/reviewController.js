@@ -74,6 +74,11 @@ async function fetchproductreview(req, res) {
                 error: null,
                 data: fetchproductrev
             })
+        } else {
+            res.json({
+                error: "Review Doesn't Exists",
+                data: null
+            })
         }
     } catch (error) {
         res.json({
