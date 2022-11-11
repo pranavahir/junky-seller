@@ -375,6 +375,95 @@ async function fetchproductinformation(req, res) {
 }
 
 
+async function listofproducts(req, res) {
+    try {
+
+        if (isNullorUndefinedorEmpty(req.body.pricefilter)) {
+
+            const searchRes = await Product.find({
+                price: { $gt: 0 }
+            }).lean()
+
+            if (searchRes !== null) {
+                if (req.body.pricefilter.toString() == "lowtohigh") {
+                    const searchResult = searchRes.sort((a, b) => {
+                        return a.price - b.price
+                    })
+                    res.json({
+                        error: null,
+                        data: searchResult
+                    })
+                    console.log(searchResult)
+
+                } else if (req.body.pricefilter.toString() == "hightolow") {
+                    const search = searchRes.sort((a, b) => {
+                        return b.price - a.price
+                    })
+                    res.json({
+                        error: null,
+                        data: search
+                    })
+                    console.log(search)
+                }
+            } else {
+                res.json({
+                    error: "someting went wrong",
+                    data: null
+                })
+            }
+        }
+        //console.log(searchResult)
+        // req.body.pricefilter=="lowtohigh"
+        if (isNullorUndefinedorEmpty(req.body.searchfield)) {
+            var perpage = 10;
+            const searchResult = await Product.find({
+
+                $text: {
+                    $search: req.body.searchfield
+                }
+            }).limit(perpage).lean()
+
+            if (searchResult !== null) {
+                res.json({
+                    error: null,
+                    data: searchResult
+                })
+            }
+            //console.log(searchResult)
+
+            // req.body.pricefilter=="lowtohigh"
+        } else if (isNullorUndefinedorEmpty(req.body.category)) {
+
+            console.log(req.body)
+            const matchObject = {}
+            matchObject.category = req.body.category
+
+            if (isNullorUndefinedorEmpty(req.body.subcategory)) {
+                matchObject.subcategory = req.body.subcategory
+            }
+
+            if (isNullorUndefinedorEmpty(req.body.leafcategory)) {
+                matchObject.leafcategory = req.body.leafcategory
+            }
+            //console.log(matchObject)
+            const fetchproductinformation = await Product.aggregate([{
+                    $match: matchObject
+                }])
+                //console.log(fetchproductinformation);
+            res.json({
+                error: null,
+                data: fetchproductinformation
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        res.json({
+            error: "someting went wrong",
+            data: null
+        })
+    }
+}
+
 module.exports = {
     createproduct,
     deleteproduct,
@@ -383,5 +472,6 @@ module.exports = {
     searchproducts,
     searchsingleproduct,
     updateproduct,
-    fetchproductinformation
+    fetchproductinformation,
+    listofproducts
 }
