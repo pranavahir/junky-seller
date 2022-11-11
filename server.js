@@ -7,10 +7,12 @@ const UserRoutes = require('./routes/userRoutes')
 const keys = require('./config/key')
 const ProductRoutes = require('./routes/productRoutes')
 const CartRoutes = require('./routes/cartRoutes')
+const CustomerReviewRoutes = require('./routes/customerReviewRoutes')
 const OrderedRoutes = require('./routes/orderedRoutes')
 const RecentlyViewedRoutes = require('./routes/recentlyViewedRoutes')
 const AbandonedCartRoutes = require('./routes/abandonedCartRoutes')
 const OrderedHistoryRoutes = require('./routes/orderedHistoryRoutes')
+const QuestionandanswerRoutes = require('./routes/questionandanswerRoutes')
 mongoose.connect(keys.URI, { useNewUrlParser: true, useUnifiedTopology: true }, (error) => {
     if (error) {
         throw error
@@ -24,9 +26,12 @@ app.use('/', UserRoutes)
 app.use('/', ProductRoutes);
 app.use('/', CartRoutes);
 app.use('/', OrderedRoutes);
-app.use('/', AbandonedCartRoutes)
-app.use('/', OrderedHistoryRoutes)
-app.use('/', RecentlyViewedRoutes)
+app.use('/', AbandonedCartRoutes);
+app.use('/', OrderedHistoryRoutes);
+app.use('/', RecentlyViewedRoutes);
+app.use('/', CustomerReviewRoutes);
+app.use('/', QuestionandanswerRoutes);
+
 app.listen(PORT, () => {
     console.log(`Server is Running on http://localhost:${PORT}`)
 })
