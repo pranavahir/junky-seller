@@ -375,6 +375,99 @@ async function fetchproductinformation(req, res) {
 }
 
 
+async function listofproducts(req, res) {
+    try {
+        if (isNullorUndefinedorEmpty(req.body.pricefilter)) {
+            var perpage = 10;
+            let page = 1;
+            let asc = 1;
+            if (isNullorUndefinedorEmpty(req.query.page)) page = req.query.page
+
+            if (req.body.pricefilter.toString() == "lowtohigh") asc = 1
+            if (req.body.pricefilter.toString() == "hightolow") asc = -1;
+
+            const searchResult = await Product.aggregate([
+                { $sort: { price: asc } },
+                { $skip: (page - 1) * perpage },
+                { $limit: perpage }
+            ])
+
+            //console.log(searchResult)
+            if (searchResult !== null) {
+                res.json({
+                    error: null,
+                    data: searchResult
+                })
+            } else {
+                res.json({
+                    error: "someting went wrong",
+                    data: null
+                })
+            }
+        } else if (isNullorUndefinedorEmpty(req.body.searchfield)) {
+            var perpage = 10;
+            let page = 1;
+            if (isNullorUndefinedorEmpty(req.query.page)) page = req.query.page
+            const searchResult = await Product.aggregate([
+                { $match: { $text: { $search: req.body.searchfield } } },
+                { $skip: (page - 1) * perpage },
+                { $limit: perpage }
+            ])
+            console.log(searchResult)
+            if (searchResult !== null) {
+                res.json({
+                    error: null,
+                    data: searchResult
+                })
+            }
+
+        } else if (isNullorUndefinedorEmpty(req.body.category)) {
+
+            var perpage = 2;
+            let page = 1;
+            if (isNullorUndefinedorEmpty(req.query.page)) page = req.query.page
+            const matchObject = {}
+            matchObject.category = req.body.category
+
+            if (isNullorUndefinedorEmpty(req.body.subcategory)) {
+                matchObject.subcategory = req.body.subcategory
+            }
+            if (isNullorUndefinedorEmpty(req.body.leafcategory)) {
+                matchObject.leafcategory = req.body.leafcategory
+            }
+            let asc = 1;
+            if (isNullorUndefinedorEmpty(req.body.pricefilter)) {
+                if (req.body.pricefilter == "lowtohigh") {
+                    asc = 1;
+                }
+                if (req.body.pricefilter == "hightolow") {
+                    asc = -1;
+                }
+            }
+            const fetchproductinformation = await Product.aggregate([
+                    { $match: matchObject },
+                    { $sort: { price: asc } },
+                    { $skip: (page - 1) * perpage },
+                    { $limit: perpage }
+
+                ])
+                // console.log(fetchproductinformation);
+            if (fetchproductinformation !== null) {
+                res.json({
+                    error: null,
+                    data: fetchproductinformation
+                })
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        res.json({
+            error: "someting went wrong",
+            data: null
+        })
+    }
+}
+
 module.exports = {
     createproduct,
     deleteproduct,
@@ -383,5 +476,6 @@ module.exports = {
     searchproducts,
     searchsingleproduct,
     updateproduct,
-    fetchproductinformation
+    fetchproductinformation,
+    listofproducts
 }

@@ -28,6 +28,8 @@ ProductRoutes.get('/searchsingleproduct', productController.searchsingleproduct)
 ProductRoutes.get('/searchproducts', productController.searchproducts)
 
 ProductRoutes.get('/fetchproductinformation', productController.fetchproductinformation)
+ProductRoutes.get('/listofproducts', productController.listofproducts)
+
 
 
 
