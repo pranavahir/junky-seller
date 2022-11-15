@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const PORT = 4000
+const cors = require('cors')
 const app = express()
 const mongoose = require('mongoose')
 const UserRoutes = require('./routes/userRoutes')
@@ -20,6 +21,7 @@ mongoose.connect(keys.URI, { useNewUrlParser: true, useUnifiedTopology: true }, 
         console.log("MongoDB Connected")
     }
 })
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use('/', UserRoutes)

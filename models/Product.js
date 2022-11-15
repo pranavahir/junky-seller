@@ -82,6 +82,9 @@ const ProductSchema = new Schema({
     isactive: {
         type: Boolean,
         default: true
+    },
+    avatar:{
+        type:String
     }
 }, { timestamps: true })
 

@@ -203,16 +203,28 @@ async function updateproduct(req, res) {
 async function singleproduct(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
-            const getproduct = await Product.aggregate([{
+            const getproduct = await Product.aggregate([
+                {
                 $match: {
-                    _id: req.body.productid
+                    _id: mongoose.Types.ObjectId(req.body.productid)
                 }
-            }])
-            if (getproduct !== null && getproduct.isactive === true) {
+            },
+            {
+                $lookup:
+                {
+                  from: "users",
+                  localField: "createdBy",
+                  foreignField: "_id",
+                  as: "User"
+                }
+            },
+            {$unwind:"$User"}
+        ])
+            if (getproduct.length !== 0 && getproduct[0].isactive === true) {
                 res.json({
                     error: null,
                     data: {
-                        ...getproduct._doc
+                        ...getproduct[0]
                     }
                 })
             } else {

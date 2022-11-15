@@ -5,7 +5,7 @@ const userController = require('../../controllers/user/userController')
 const { isNullorUndefinedorEmpty } = require('../../utility/util')
 async function createuser(req, res) {
     try {
-        if (isNullorUndefinedorEmpty(req.body.email) && (req.body.isBuyer !== null && req.body.isBuyer !== undefined && req.body.isBuyer === true || req.body.isSeller !== null && req.body.isSeller !== undefined && req.body.isSeller === true)) {
+        if (isNullorUndefinedorEmpty(req.body.email) && (req.body.isBuyer !== null && req.body.isBuyer !== undefined && req.body.isBuyer === "true" || req.body.isSeller !== null && req.body.isSeller !== undefined && req.body.isSeller === "true")) {
             //Check if User Exists 
             const getuser = await User.findOne({ email: req.body.email }).lean()
             if (getuser !== null) {

@@ -18,7 +18,7 @@ ProductRoutes.post('/deleteproduct', productController.deleteproduct)
 ProductRoutes.post('/updateproduct', productController.updateproduct)
 
 
-ProductRoutes.get('/singleproduct', productController.singleproduct)
+ProductRoutes.post('/singleproduct', productController.singleproduct)
 
 ProductRoutes.get('/getproducts', productController.getproducts)
 
