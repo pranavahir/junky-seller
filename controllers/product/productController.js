@@ -475,16 +475,25 @@ async function metalprice(req, res) {
 }
 
 async function recentlyaddedproducts(req, res) {
-    var perpage = 2;
     let page = 1;
     if (isNullorUndefinedorEmpty(req.query.page)) page = req.query.page
-    const fetchrecently = await Product.find().sort({ createdAt: -1 }).skip((page - 1) * perpage).limit(perpage)
-    if (fetchrecently != null) {
-        res.json({
-            error: null,
-            data: fetchrecently
-        })
+    var perpage = 2;
+    let prodnumber = (page - 1) * perpage;
+    if (prodnumber < 100) {
+        const fetchrecently = await Product.find().sort({ createdAt: -1 }).skip(prodnumber).limit(perpage)
+        if (fetchrecently != null) {
+            res.json({
+                error: null,
+                data: fetchrecently
+            })
+        } else {
+            res.json({
+                error: "something went wrong",
+                data: null
+            })
+        }
     } else {
+
         res.json({
             error: "something went wrong",
             data: null
