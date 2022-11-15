@@ -31,9 +31,7 @@ async function storereport(req, res) {
                         ...getupdatedreport
                     }
                 })
-                console.log('sending email...')
                 main()
-                console.log('email sent ✓')
 
             } else {
                 const createreport = new StoreReport({
@@ -43,7 +41,6 @@ async function storereport(req, res) {
                 })
 
                 const savereport = await createreport.save()
-                console.log(savereport)
 
                 res.json({
                     error: null,
@@ -51,9 +48,7 @@ async function storereport(req, res) {
                         ...savereport
                     }
                 })
-                console.log('sending email...')
                 main()
-                console.log('email sent ✓')
             }
         }
     } catch (error) {
