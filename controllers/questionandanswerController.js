@@ -12,7 +12,6 @@ async function storequestion(req, res) {
         if (isNullorUndefinedorEmpty(req.body.userid) && isNullorUndefinedorEmpty(req.body.productid)) {
 
             const storeques = await Questionandanswer.findOne({ userid: req.body.userid, productid: req.body.productid })
-            console.log("here")
             if (storeques !== null) {
 
                 const updateques = await Questionandanswer.updateOne({
@@ -39,7 +38,6 @@ async function storequestion(req, res) {
                 })
 
                 const saveques = await createques.save()
-                console.log(saveques)
 
                 res.json({
                     error: null,
@@ -64,10 +62,6 @@ async function updateanswer(req, res) {
         if (isNullorUndefinedorEmpty(req.body.userid) && isNullorUndefinedorEmpty(req.body.productid)) {
             const storeans = await Questionandanswer.findOne({ userid: req.body.userid, productid: req.body.productid })
             const getproduct = await Product.findOne({ _id: req.body.productid })
-
-            console.log(storeans)
-            console.log("break")
-            console.log(getproduct)
 
             if (storeans !== null && getproduct != null && storeans.userid.toString() === getproduct.createdBy.toString()) {
 
@@ -110,7 +104,6 @@ async function fetchquestionandanswer(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
 
-            console.log("entering")
             const fetchq = await Questionandanswer.aggregate([{
                 $match: {
                     productid: ObjectId(req.body.productid)
