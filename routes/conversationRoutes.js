@@ -4,7 +4,7 @@ const ConversationRoutes = express.Router()
 const conversationController = require('../controllers/conversation/conversationController')
 
 
-ConversationRoutes.post('/fetchcurrency',conversationController.fetchcurrency);
+ConversationRoutes.post('/fetchcurrency',conversationController.fetchcurrencycronjob);
 
 module.exports = ConversationRoutes;
 

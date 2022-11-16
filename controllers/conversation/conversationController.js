@@ -3,6 +3,7 @@ const Conversation = require('../../models/Conversation')
 const myHeaders = new Headers();
 myHeaders.append("apikey", "FMcJ5XR5Q5q3mCflnRp3PYxCMJ66cImE");
 const isoCountryCurrency = require("iso-country-currency")
+const cron = require("node-cron");
 
 const requestOptions = {
     method: 'GET',
@@ -19,6 +20,7 @@ const requestOptions = {
 
 async function fetchcurrency(req, res) {
     try {
+        
         const currencyList = [
             'NZD',
             'AUD',
@@ -180,7 +182,7 @@ async function fetchcurrency(req, res) {
             'GGP',
             'RSD']
 
-        
+
         var currencyListResult = {};
 
         await fetch(`https://api.apilayer.com/exchangerates_data/latest?symbols=${currencyList}&base=INR`, requestOptions)
@@ -188,7 +190,7 @@ async function fetchcurrency(req, res) {
             .then(result => { currencyListResult = JSON.parse(result) })
             .catch(error => console.log('error', error));
 
-        // console.log(currencyListResult)
+        console.log(currencyListResult)
         // console.log(typeof currencyListResult)
         // console.log(currencyListResult.rates);
         let conversationObject = []
@@ -200,31 +202,37 @@ async function fetchcurrency(req, res) {
                 // console.log(countryList);
 
                 for (let i = 0; i < countryList.length; i++) {
-                    const newConversation = new Conversation({
-                        country: countryList[i],
-                        currencyname: currency,
-                        currencyvalue: currencyListResult.rates[currency]
-                    })
-                    // console.log(newConversation);
-                    conversationObject.push(newConversation);
-                }
-                // console.log(conversationObject)
+                    const findcountry = await Conversation.findOne({ country: countryList[i] })
+                    if (findcountry !== null) {
+                        const updateprice = await Conversation.updateOne({
+                            country: countryList[i]
+                        }, {
+                            $set: {
+                                currencyvalue: currencyListResult.rates[currency]
+                            }
+                        }
+                        )
+                        const findupdatedcountry = await Conversation.findOne({country:countryList[i]})
+                        conversationObject.push(findupdatedcountry)
+                    }else{
+                        const newConversation = new Conversation({
+                            country: countryList[i],
+                            currencyname: currency,
+                            currencyvalue: currencyListResult.rates[currency]
+                        })
+                        const savecountry = await newConversation.save()
+                        conversationObject.push(savecountry)
+                    }
+                 }
 
             } catch (error) {
                 continue;
             }
-
-            // console.log(countryList);
-        }
-        // console.log(conversationObject);
-
-        const saveConversation = await Conversation.insertMany(conversationObject)
-        // console.log(saveConversation);
-        // const saveConversationObject = await saveConversation.save()
+}
 
         res.json({
             error: null,
-            data: saveConversation
+            data: conversationObject
         })
 
     } catch (error) {
@@ -234,7 +242,14 @@ async function fetchcurrency(req, res) {
         })
     }
 }
+// */10 * * * * * -> every 10 sec
+// 0 8 * * *
+async function fetchcurrencycronjob(req,res){
+    // runs on every day morning 8 am
+    cron.schedule("0 8 * * *",fetchcurrency);
+
+}
 
 module.exports = {
-    fetchcurrency
+    fetchcurrencycronjob
 }
