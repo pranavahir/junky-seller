@@ -10,7 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.1",
+    "exchange-rates-api": "^1.1.0",
     "express": "^4.18.2",
+    "iso-country-currency": "^0.6.0",
     "mongoose": "^6.6.5",
     "nodemailer": "^6.8.0"
   }

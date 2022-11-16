@@ -5,12 +5,16 @@ const Product = require('../../models/Product')
 const User = require('../../models/User')
 const productController = require('../../controllers/product/productController')
 const { isNullorUndefinedorEmpty } = require('../../utility/util')
+const { exchangeRates } = require('exchange-rates-api');
+const isoCountryCurrency = require("iso-country-currency")
+const Conversation = require('../../models/Conversation')
 async function createproduct(req, res) {
     try {
-        if (isNullorUndefinedorEmpty(req.body.brandName) && isNullorUndefinedorEmpty(req.body.title) && isNullorUndefinedorEmpty(req.body.description) && isNullorUndefinedorEmpty(req.body.weight) && isNullorUndefinedorEmpty(req.body.mainImage) && isNullorUndefinedorEmpty(req.body.additionalImage1) && isNullorUndefinedorEmpty(req.body.price) && isNullorUndefinedorEmpty(req.body.quantity) && isNullorUndefinedorEmpty(req.body.userid) && isNullorUndefinedorEmpty(req.body.category)) {
+        if (isNullorUndefinedorEmpty(req.body.brandName) && isNullorUndefinedorEmpty(req.body.title) && isNullorUndefinedorEmpty(req.body.description) && isNullorUndefinedorEmpty(req.body.weight) && isNullorUndefinedorEmpty(req.body.mainImage) && isNullorUndefinedorEmpty(req.body.additionalImage1) && isNullorUndefinedorEmpty(req.body.price) && isNullorUndefinedorEmpty(req.body.quantity) && isNullorUndefinedorEmpty(req.body.userid) && isNullorUndefinedorEmpty(req.body.category) && isNullorUndefinedorEmpty(req.body.country)) {
             // console.log("DONE")
             //Check if User Exists
             const getuser = await User.findOne({ _id: req.body.userid }).lean()
+            // console.log(req.body.userid,getuser);
             if (getuser !== null) {
                 //Store Prouct Info
                 const createProduct = new Product({
@@ -33,7 +37,8 @@ async function createproduct(req, res) {
                     category: req.body.category,
                     createdBy: req.body.userid,
                     subcategory: req.body.subcategory,
-                    leafcategory: req.body.leafcategory
+                    leafcategory: req.body.leafcategory,
+                    country: req.body.country
                 })
                 const saveProduct = await createProduct.save()
                 res.json({
@@ -97,7 +102,7 @@ async function deleteproduct(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
             const getproduct = await Product.findOne({ _id: req.body.productid }).lean()
-                // console.log(getproduct, req.body.productid);
+            // console.log(getproduct, req.body.productid);
             if (getproduct !== null) {
                 getproduct.isactive = false
                 const updateDeleteProduct = await Product.updateOne({
@@ -164,7 +169,8 @@ async function updateproduct(req, res) {
                         additionalImage5: isNullorUndefinedorEmpty(req.body.additionalImage5) ? req.body.additionalImage5 : getproduct.additionalImage5,
                         price: isNullorUndefinedorEmpty(req.body.price) ? req.body.price : getproduct.price,
                         quantity: isNullorUndefinedorEmpty(req.body.quantity) ? req.body.quantity : getproduct.quantity,
-                        category: isNullorUndefinedorEmpty(req.body.category) ? req.body.category : getproduct.category
+                        category: isNullorUndefinedorEmpty(req.body.category) ? req.body.category : getproduct.category,
+                        country: isNullorUndefinedorEmpty(req.body.country) ? req.body.country : getproduct.country
                     }
                 })
 
@@ -203,24 +209,43 @@ async function updateproduct(req, res) {
 async function singleproduct(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
-            const getproduct = await Product.aggregate([{
-                $match: {
-                    _id: req.body.productid
+            // console.log(req.body.productid,req.body.tocountry);
+            // const getproduct = await Product.aggregate([{
+            //     $match: {
+            //         _id: req.body.productid
+            //     }
+            // }])
+            const getProduct = await Product.findOne({ _id: req.body.productid })
+            // console.log(findProduct);
+            // console.log(getProduct);
+            // console.log()
+            if (isNullorUndefinedorEmpty(req.body.tocountry)) {
+                // getParamByParam 
+                const findCountry = await Conversation.findOne({ country: req.body.tocountry })
+                if (findCountry !== null) {
+                    getProduct.price = getProduct.price * findCountry.currencyvalue
                 }
-            }])
-            if (getproduct !== null && getproduct.isactive === true) {
-                res.json({
-                    error: null,
-                    data: {
-                        ...getproduct._doc
-                    }
-                })
-            } else {
-                res.json({
-                    error: "Invalid productid",
-                    data: null
-                })
+                if (getProduct !== null && getProduct.isactive === true) {
+                    res.json({
+                        error: null,
+                        data: {
+                            ...getProduct._doc
+                        }
+                    })
+                } else if (getProduct === null) {
+                    res.json({
+                        error: "Invalid productid",
+                        data: null
+                    })
+                }
+                else {
+                    res.json({
+                        error: "enter valid country",
+                        data: null
+                    })
+                }
             }
+
 
         } else {
             res.json({
@@ -358,9 +383,9 @@ async function fetchproductinformation(req, res) {
             console.log(matchObject)
 
             const fetchproductinformation = await Product.aggregate([{
-                    $match: matchObject
-                }])
-                //console.log(fetchproductinformation);
+                $match: matchObject
+            }])
+            //console.log(fetchproductinformation);
             res.json({
                 error: null,
                 data: fetchproductinformation
@@ -445,13 +470,13 @@ async function listofproducts(req, res) {
                 }
             }
             const fetchproductinformation = await Product.aggregate([
-                    { $match: matchObject },
-                    { $sort: { price: asc } },
-                    { $skip: (page - 1) * perpage },
-                    { $limit: perpage }
+                { $match: matchObject },
+                { $sort: { price: asc } },
+                { $skip: (page - 1) * perpage },
+                { $limit: perpage }
 
-                ])
-                // console.log(fetchproductinformation);
+            ])
+            // console.log(fetchproductinformation);
             if (fetchproductinformation !== null) {
                 res.json({
                     error: null,
