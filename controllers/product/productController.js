@@ -8,6 +8,8 @@ const { isNullorUndefinedorEmpty } = require('../../utility/util')
 const { exchangeRates } = require('exchange-rates-api');
 const isoCountryCurrency = require("iso-country-currency")
 const Conversation = require('../../models/Conversation')
+const axios = require("axios");
+
 async function createproduct(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.brandName) && isNullorUndefinedorEmpty(req.body.title) && isNullorUndefinedorEmpty(req.body.description) && isNullorUndefinedorEmpty(req.body.weight) && isNullorUndefinedorEmpty(req.body.mainImage) && isNullorUndefinedorEmpty(req.body.additionalImage1) && isNullorUndefinedorEmpty(req.body.price) && isNullorUndefinedorEmpty(req.body.quantity) && isNullorUndefinedorEmpty(req.body.userid) && isNullorUndefinedorEmpty(req.body.category) && isNullorUndefinedorEmpty(req.body.country)) {
@@ -260,7 +262,6 @@ async function singleproduct(req, res) {
         })
     }
 }
-
 async function getproducts(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.createdBy)) {
@@ -301,7 +302,6 @@ async function searchsingleproduct(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
             const getProduct = await Product.findOne({ _id: req.body.productid }).lean()
-            console.log(req.body.productid, getProduct);
             if (getProduct !== null && getProduct.isactive === true) {
                 res.json({
                     error: null,
@@ -370,8 +370,6 @@ async function fetchproductinformation(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.category)) {
 
-            console.log("entering")
-            console.log(req.body)
             const matchObject = {}
             matchObject.category = req.body.category
             if (isNullorUndefinedorEmpty(req.body.subcategory)) {
@@ -380,12 +378,10 @@ async function fetchproductinformation(req, res) {
             if (isNullorUndefinedorEmpty(req.body.leafcategory)) {
                 matchObject.leafcategory = req.body.leafcategory
             }
-            console.log(matchObject)
-
             const fetchproductinformation = await Product.aggregate([{
-                $match: matchObject
-            }])
-            //console.log(fetchproductinformation);
+                    $match: matchObject
+                }])
+                //console.log(fetchproductinformation);
             res.json({
                 error: null,
                 data: fetchproductinformation
@@ -403,85 +399,69 @@ async function fetchproductinformation(req, res) {
 async function listofproducts(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.pricefilter)) {
+            var pricefilter = {}
             var perpage = 10;
             let page = 1;
             let asc = 1;
             if (isNullorUndefinedorEmpty(req.query.page)) page = req.query.page
 
-            if (req.body.pricefilter.toString() == "lowtohigh") asc = 1
-            if (req.body.pricefilter.toString() == "hightolow") asc = -1;
-
-            const searchResult = await Product.aggregate([
-                { $sort: { price: asc } },
-                { $skip: (page - 1) * perpage },
-                { $limit: perpage }
-            ])
-
-            //console.log(searchResult)
-            if (searchResult !== null) {
-                res.json({
-                    error: null,
-                    data: searchResult
-                })
-            } else {
-                res.json({
-                    error: "someting went wrong",
-                    data: null
-                })
+            if (req.body.pricefilter.toString() == "lowtohigh") {
+                asc = 1
+                pricefilter.$sort = {}
+                pricefilter.$sort.price = 1
             }
-        } else if (isNullorUndefinedorEmpty(req.body.searchfield)) {
-            var perpage = 10;
-            let page = 1;
-            if (isNullorUndefinedorEmpty(req.query.page)) page = req.query.page
-            const searchResult = await Product.aggregate([
-                { $match: { $text: { $search: req.body.searchfield } } },
-                { $skip: (page - 1) * perpage },
-                { $limit: perpage }
-            ])
-            console.log(searchResult)
-            if (searchResult !== null) {
-                res.json({
-                    error: null,
-                    data: searchResult
-                })
+            if (req.body.pricefilter.toString() == "hightolow") {
+                asc = -1;
+                pricefilter.$sort = {}
+                pricefilter.$sort.price = -1
             }
+            console.log(pricefilter)
 
-        } else if (isNullorUndefinedorEmpty(req.body.category)) {
-
-            var perpage = 2;
-            let page = 1;
-            if (isNullorUndefinedorEmpty(req.query.page)) page = req.query.page
-            const matchObject = {}
-            matchObject.category = req.body.category
-
-            if (isNullorUndefinedorEmpty(req.body.subcategory)) {
-                matchObject.subcategory = req.body.subcategory
-            }
-            if (isNullorUndefinedorEmpty(req.body.leafcategory)) {
-                matchObject.leafcategory = req.body.leafcategory
-            }
-            let asc = 1;
-            if (isNullorUndefinedorEmpty(req.body.pricefilter)) {
-                if (req.body.pricefilter == "lowtohigh") {
-                    asc = 1;
+            if (isNullorUndefinedorEmpty(req.body.searchfield)) {
+                var perpage = 10;
+                let page = 1;
+                if (isNullorUndefinedorEmpty(req.query.page)) page = req.query.page
+                const searchResult = await Product.aggregate([
+                    { $match: { $text: { $search: req.body.searchfield } } },
+                    { $skip: (page - 1) * perpage },
+                    { $limit: perpage },
+                    pricefilter
+                ])
+                if (searchResult !== null) {
+                    res.json({
+                        error: null,
+                        data: searchResult
+                    })
                 }
-                if (req.body.pricefilter == "hightolow") {
-                    asc = -1;
-                }
-            }
-            const fetchproductinformation = await Product.aggregate([
-                { $match: matchObject },
-                { $sort: { price: asc } },
-                { $skip: (page - 1) * perpage },
-                { $limit: perpage }
 
-            ])
-            // console.log(fetchproductinformation);
-            if (fetchproductinformation !== null) {
-                res.json({
-                    error: null,
-                    data: fetchproductinformation
-                })
+            } else if (isNullorUndefinedorEmpty(req.body.category)) {
+                const matchObject = {}
+                var perpage = 2;
+                let page = 1;
+                if (isNullorUndefinedorEmpty(req.query.page)) page = req.query.page
+                matchObject.category = req.body.category
+
+                if (isNullorUndefinedorEmpty(req.body.subcategory)) {
+                    matchObject.subcategory = req.body.subcategory
+                }
+                if (isNullorUndefinedorEmpty(req.body.leafcategory)) {
+                    matchObject.leafcategory = req.body.leafcategory
+                }
+                let asc = 1;
+                const fetchproductinformation = await Product.aggregate([
+                        { $match: matchObject },
+                        { $skip: (page - 1) * perpage },
+                        { $limit: perpage },
+                        pricefilter
+
+                    ])
+                    // console.log(fetchproductinformation);
+                if (fetchproductinformation !== null) {
+                    res.json({
+                        error: null,
+                        data: fetchproductinformation
+                    })
+                }
             }
         }
     } catch (error) {
@@ -493,6 +473,61 @@ async function listofproducts(req, res) {
     }
 }
 
+async function metalprice(req, res) {
+    const options = {
+        method: 'GET',
+        url: 'https://live-metal-prices.p.rapidapi.com/v1/latest/XAU,XAG,PA,PL,GBP,EUR/INR',
+        headers: {
+            'X-RapidAPI-Key': '0c26d728d5msh69261396ad1263ep163180jsn6738e977e13a',
+            'X-RapidAPI-Host': 'live-metal-prices.p.rapidapi.com'
+        }
+    }
+    let searchResult = await axios.request(options)
+    let resu = searchResult.data.rates
+        //this result gies us the price for one ounce
+    if (resu != null) {
+        res.json({
+            error: null,
+            data: resu
+        })
+    } else {
+        res.json({
+            error: "enter valid search field",
+            data: null
+        })
+    }
+}
+
+async function recentlyaddedproducts(req, res) {
+    let page = 1;
+    if (isNullorUndefinedorEmpty(req.query.page)) page = req.query.page
+    var perpage = 2;
+    let prodnumber = (page - 1) * perpage;
+    if (prodnumber < 100) {
+        const fetchrecently = await Product.find().sort({ createdAt: -1 }).skip(prodnumber).limit(perpage)
+        if (fetchrecently != null) {
+            res.json({
+                error: null,
+                data: fetchrecently
+            })
+        } else {
+            res.json({
+                error: "something went wrong",
+                data: null
+            })
+        }
+    } else {
+
+        res.json({
+            error: "something went wrong",
+            data: null
+        })
+    }
+}
+
+
+
+
 module.exports = {
     createproduct,
     deleteproduct,
@@ -502,5 +537,7 @@ module.exports = {
     searchsingleproduct,
     updateproduct,
     fetchproductinformation,
-    listofproducts
+    listofproducts,
+    metalprice,
+    recentlyaddedproducts
 }

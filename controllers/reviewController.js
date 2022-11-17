@@ -41,7 +41,6 @@ async function storecustomerreview(req, res) {
                 })
 
                 const savereview = await createreview.save()
-                console.log(savereview)
 
                 res.json({
                     error: null,
@@ -65,11 +64,17 @@ async function fetchproductreview(req, res) {
 
             console.log("entering")
             const fetchproductrev = await CustomerReview.aggregate([{
-                $match: {
-                    productid: ObjectId(req.body.productid)
+                    $match: {
+                        productid: ObjectId(req.body.productid)
+                    }
+                },
+                {
+                    "$addFields": {
+                        "average": { "$avg": "$rating" }
+                    }
                 }
-            }])
-            console.log(fetchproductrev);
+            ])
+
             res.json({
                 error: null,
                 data: fetchproductrev

@@ -14,6 +14,7 @@ const CustomerReviewSchema = new Schema({
     review: {
         type: String,
     }
+
 })
 
 module.exports = CustomerReview = mongoose.model('CustomerReview', CustomerReviewSchema);
