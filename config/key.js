@@ -1,5 +1,5 @@
 module.exports = {
-        URI: `mongodb+srv://Peace:pkAqnZiEUFHsOqe4@cluster0.dit7udq.mongodb.net/?retryWrites=true&w=majority`
+        URI: `mongodb://localhost:27017/widski`
     }
     // mongodb+srv://Peace:8ML700d0OLBc0KRk@cluster0.9ulqv.mongodb.net/?retryWrites=true&w=majority
     // mongodb+srv://<username>:<password>@cluster0.dit7udq.mongodb.net/?retryWrites=true&w=majority

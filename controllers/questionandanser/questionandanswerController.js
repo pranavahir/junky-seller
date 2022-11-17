@@ -1,10 +1,10 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const QuestionandanswerRoutes = express.Router()
-const Questionandanswer = require('../models/Questionandanswer')
-const Product = require('../models/Product')
-const questionandanswerController = require('../controllers/questionandanswerController')
-const { isNullorUndefinedorEmpty } = require('../utility/util')
+const Questionandanswer = require('../../models/Questionandanswer')
+const Product = require('../../models/Product')
+const questionandanswerController = require('../../controllers/questionandanser/questionandanswerController')
+const { isNullorUndefinedorEmpty } = require('../../utility/util')
 const ObjectId = mongoose.Types.ObjectId
 
 async function storequestion(req, res) {
