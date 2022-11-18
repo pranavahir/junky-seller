@@ -1,7 +1,7 @@
 const express = require('express')
 const QuestionandanswerRoutes = express.Router()
 const Questionandanswer = require('../models/Questionandanswer')
-const questionandanswerController = require('../controllers/questionandanswerController')
+const questionandanswerController = require('../controllers/questionandanser/questionandanswerController')
 const { isNullorUndefinedorEmpty, fetchFromReferenceNumber } = require('../utility/util')
 
 

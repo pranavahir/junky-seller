@@ -1,10 +1,10 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const StoreReportRoutes = express.Router()
-const StoreReport = require('../models/StoreReport')
-const reviewController = require('../controllers/storereportController')
-const { isNullorUndefinedorEmpty } = require('../utility/util')
-const { main } = require('../controllers/reportSender');
+const StoreReport = require('../../models/StoreReport')
+const reviewController = require('../../controllers/report/storereportController')
+const { isNullorUndefinedorEmpty } = require('../../utility/util')
+const { main } = require('../../controllers/report/reportSender');
 const ObjectId = mongoose.Types.ObjectId
 
 async function storereport(req, res) {
