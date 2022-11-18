@@ -9,26 +9,26 @@ const { isNullorUndefinedorEmpty } = require('../utility/util')
 const RecentlyViewedController = require('../controllers/product/RecentlyViewedController')
 
 
-ProductRoutes.post('/createproduct', productController.createproduct)
+ProductRoutes.post('/server/createproduct', productController.createproduct)
 
 
-ProductRoutes.post('/deleteproduct', productController.deleteproduct)
+ProductRoutes.post('/server/deleteproduct', productController.deleteproduct)
 
 
-ProductRoutes.post('/updateproduct', productController.updateproduct)
+ProductRoutes.post('/server/updateproduct', productController.updateproduct)
 
 
-ProductRoutes.post('/singleproduct', productController.singleproduct)
+ProductRoutes.post('/server/singleproduct', productController.singleproduct)
 
-ProductRoutes.get('/getproducts', productController.getproducts)
+ProductRoutes.get('/server/getproducts', productController.getproducts)
 
-ProductRoutes.get('/searchsingleproduct', productController.searchsingleproduct)
+ProductRoutes.get('/server/searchsingleproduct', productController.searchsingleproduct)
 
 
-ProductRoutes.get('/searchproducts', productController.searchproducts)
+ProductRoutes.get('/server/searchproducts', productController.searchproducts)
 
-ProductRoutes.get('/fetchproductinformation', productController.fetchproductinformation)
-ProductRoutes.post('/listofproducts', productController.listofproducts)
+ProductRoutes.get('/server/fetchproductinformation', productController.fetchproductinformation)
+ProductRoutes.post('/server/listofproducts', productController.listofproducts)
 
 
 
