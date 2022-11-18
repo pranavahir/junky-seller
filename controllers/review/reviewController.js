@@ -1,9 +1,9 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const customerReviewRoutes = express.Router()
-const CustomerReview = require('../models/CustomerReview')
-const reviewController = require('../controllers/reviewController')
-const { isNullorUndefinedorEmpty } = require('../utility/util')
+const CustomerReview = require('../../models/CustomerReview')
+const reviewController = require('../../controllers/review/reviewController')
+const { isNullorUndefinedorEmpty } = require('../../utility/util')
 const ObjectId = mongoose.Types.ObjectId
 
 async function storecustomerreview(req, res) {
@@ -41,7 +41,6 @@ async function storecustomerreview(req, res) {
                 })
 
                 const savereview = await createreview.save()
-                console.log(savereview)
 
                 res.json({
                     error: null,
@@ -62,14 +61,18 @@ async function storecustomerreview(req, res) {
 async function fetchproductreview(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
-
-            console.log("entering")
             const fetchproductrev = await CustomerReview.aggregate([{
-                $match: {
-                    productid: ObjectId(req.body.productid)
+                    $match: {
+                        productid: ObjectId(req.body.productid)
+                    }
+                },
+                {
+                    "$addFields": {
+                        "average": { "$avg": "$rating" }
+                    }
                 }
-            }])
-            console.log(fetchproductrev);
+            ])
+
             res.json({
                 error: null,
                 data: fetchproductrev

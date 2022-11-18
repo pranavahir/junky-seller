@@ -29,6 +29,11 @@ ProductRoutes.get('/server/searchproducts', productController.searchproducts)
 
 ProductRoutes.get('/server/fetchproductinformation', productController.fetchproductinformation)
 ProductRoutes.post('/server/listofproducts', productController.listofproducts)
+ProductRoutes.get('/fetchproductinformation', productController.fetchproductinformation)
+ProductRoutes.get('/listofproducts', productController.listofproducts)
+ProductRoutes.get('/metalprice', productController.metalprice)
+ProductRoutes.get('/recentlyaddedproducts', productController.recentlyaddedproducts)
+
 
 
 

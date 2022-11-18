@@ -1,10 +1,10 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const StoreReportRoutes = express.Router()
-const StoreReport = require('../models/StoreReport')
-const reviewController = require('../controllers/storereportController')
-const { isNullorUndefinedorEmpty } = require('../utility/util')
-const { main } = require('../controllers/reportSender');
+const StoreReport = require('../../models/StoreReport')
+const reviewController = require('../../controllers/report/storereportController')
+const { isNullorUndefinedorEmpty } = require('../../utility/util')
+const { main } = require('../../controllers/report/reportSender');
 const ObjectId = mongoose.Types.ObjectId
 
 async function storereport(req, res) {
@@ -31,9 +31,7 @@ async function storereport(req, res) {
                         ...getupdatedreport
                     }
                 })
-                console.log('sending email...')
                 main()
-                console.log('email sent ✓')
 
             } else {
                 const createreport = new StoreReport({
@@ -43,7 +41,6 @@ async function storereport(req, res) {
                 })
 
                 const savereport = await createreport.save()
-                console.log(savereport)
 
                 res.json({
                     error: null,
@@ -51,9 +48,7 @@ async function storereport(req, res) {
                         ...savereport
                     }
                 })
-                console.log('sending email...')
                 main()
-                console.log('email sent ✓')
             }
         }
     } catch (error) {

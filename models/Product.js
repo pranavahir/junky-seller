@@ -79,6 +79,10 @@ const ProductSchema = new Schema({
         type: String,
         default: null
     },
+    country:{
+        type:String,
+        default:null
+    },
     isactive: {
         type: Boolean,
         default: true
