@@ -211,43 +211,40 @@ async function updateproduct(req, res) {
 async function singleproduct(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
-            // console.log(req.body.productid,req.body.tocountry);
-            // const getproduct = await Product.aggregate([{
-            //     $match: {
-            //         _id: req.body.productid
-            //     }
-            // }])
-            const getProduct = await Product.findOne({ _id: req.body.productid })
-            // console.log(findProduct);
-            // console.log(getProduct);
-            // console.log()
-            if (isNullorUndefinedorEmpty(req.body.tocountry)) {
-                // getParamByParam 
-                const findCountry = await Conversation.findOne({ country: req.body.tocountry })
-                if (findCountry !== null) {
-                    getProduct.price = getProduct.price * findCountry.currencyvalue
+            const getproduct = await Product.aggregate([
+                {
+                $match: {
+                    _id: mongoose.Types.ObjectId(req.body.productid)
                 }
-                if (getProduct !== null && getProduct.isactive === true) {
-                    res.json({
-                        error: null,
-                        data: {
-                            ...getProduct._doc
-                        }
-                    })
-                } else if (getProduct === null) {
-                    res.json({
-                        error: "Invalid productid",
-                        data: null
-                    })
+            },
+            {
+                $lookup:
+                {
+                  from: "users",
+                  localField: "createdBy",
+                  foreignField: "_id",
+                  as: "User"
                 }
-                else {
-                    res.json({
-                        error: "enter valid country",
-                        data: null
-                    })
+            },
+            {$unwind:"$User"}
+        ])
+            if (getproduct.length !== 0 && getproduct[0].isactive === true && isNullorUndefinedorEmpty(req.body.tocountry)) {
+                const findCountry = await Conversation.findOne({ country: req.body.tocountry }).lean()
+                if(findCountry !== null){
+                    getproduct[0].price = getproduct[0].price * findCountry.currencyvalue
                 }
+                res.json({
+                    error: null,
+                    data: {
+                        ...getproduct[0]
+                    }
+                })
+            } else {
+                res.json({
+                    error: "Invalid productid",
+                    data: null
+                })
             }
-
 
         } else {
             res.json({
