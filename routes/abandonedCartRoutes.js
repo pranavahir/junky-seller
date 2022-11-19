@@ -11,6 +11,6 @@ const abandonedCartController = require('../controllers/abandonedcart/abandonedC
 AbandonedCartRoutes.post('/storeabandonedcart',abandonedCartController.storeabandonedcart)
 
 
-AbandonedCartRoutes.get('/fetchabandonedcart',abandonedCartController.fetchabandonedcart)
+AbandonedCartRoutes.post('/fetchabandonedcart',abandonedCartController.fetchabandonedcart)
 
 module.exports = AbandonedCartRoutes;

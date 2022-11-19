@@ -7,7 +7,7 @@ const { isNullorUndefinedorEmpty, fetchFromReferenceNumber } = require('../utili
 
 
 QuestionandanswerRoutes.post('/storequestion', questionandanswerController.storequestion)
-QuestionandanswerRoutes.get('/fetchquestionandanswer', questionandanswerController.fetchquestionandanswer)
+QuestionandanswerRoutes.post('/fetchquestionandanswer', questionandanswerController.fetchquestionandanswer)
 QuestionandanswerRoutes.post('/updateanswer', questionandanswerController.updateanswer)
 
 

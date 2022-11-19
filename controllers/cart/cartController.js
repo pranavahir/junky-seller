@@ -113,7 +113,7 @@ async function fetchcart(req, res) {
             })
         } else {
             res.json({
-                error: "enter cartid",
+                error: "enter userid",
                 data: null
             })
         }

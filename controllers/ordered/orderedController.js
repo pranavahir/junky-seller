@@ -54,7 +54,7 @@ async function storeordered(req,res){
                 objProducts.push(objProductsInfo)
             }
             priceProduct = (priceProduct+req.body.additionalcharges)*(1-(req.body.additionaldiscount)/100)
-            console.log(objProducts)
+            // console.log(objProducts)
             // console.log(fetchCartProduct);
             const number = await fetchFromReferenceNumber()
             const createOrdered = new Ordered({
@@ -69,7 +69,7 @@ async function storeordered(req,res){
                 ordertotal:priceProduct
             })
             const saveCreatedOrdered = await createOrdered.save()
-            console.log(saveCreatedOrdered);
+            // console.log(saveCreatedOrdered);
             res.json({
                 error:null,
                 data:saveCreatedOrdered

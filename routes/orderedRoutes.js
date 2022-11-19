@@ -13,7 +13,7 @@ const { isNullorUndefinedorEmpty,fetchFromReferenceNumber } = require('../utilit
 OrderedRoutes.post('/storeordered',orderedController.storeordered)
 
 
-OrderedRoutes.get('/fetchordered',orderedController.fetchordered)
+OrderedRoutes.post('/fetchordered',orderedController.fetchordered)
 
 
 module.exports = OrderedRoutes;
