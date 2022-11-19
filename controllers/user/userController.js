@@ -48,7 +48,7 @@ async function createuser(req, res) {
                     isSeller: req.body.isSeller
                 })
                 const saveuser = await createuser.save()
-                console.log(saveuser)
+                // console.log(saveuser)
                 res.json({
                     error: null,
                     data: {
