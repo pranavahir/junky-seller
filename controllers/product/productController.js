@@ -8,6 +8,7 @@ const { isNullorUndefinedorEmpty } = require('../../utility/util')
 const { exchangeRates } = require('exchange-rates-api');
 const isoCountryCurrency = require("iso-country-currency")
 const Conversation = require('../../models/Conversation')
+const ObjectId = mongoose.Types.ObjectId
 const axios = require("axios");
 
 async function createproduct(req, res) {
@@ -237,7 +238,7 @@ async function singleproduct(req, res) {
                 // console.log(getproduct[0].country,req.body.tocountry);
                 // console.log(findCountry,findCountry1)
                 if(findCountry !== null){
-                    getproduct[0].price = getproduct[0].price * findCountry.currencyvalue * findCountry1.currencyvalue
+                    getproduct[0].price = (getproduct[0].price / findCountry1.currencyvalue) * findCountry.currencyvalue
                 }
                 res.json({
                     error: null,
@@ -270,15 +271,14 @@ async function getproducts(req, res) {
         if (isNullorUndefinedorEmpty(req.body.createdBy)) {
             const getproduct = await Product.aggregate([{
                 $match: {
-                    _id: req.body.createdBy
+                    createdBy: ObjectId(req.body.createdBy)
                 }
             }])
+            // console.log(getproduct);
             if (getproduct !== null) {
                 res.json({
                     error: null,
-                    data: {
-                        ...getproduct._doc
-                    }
+                    data: getproduct
                 })
             } else {
                 res.json({
@@ -305,11 +305,12 @@ async function searchsingleproduct(req, res) {
     try {
         if (isNullorUndefinedorEmpty(req.body.productid)) {
             const getProduct = await Product.findOne({ _id: req.body.productid }).lean()
+            // console.log(getProduct);
             if (getProduct !== null && getProduct.isactive === true) {
                 res.json({
                     error: null,
                     data: {
-                        ...getProduct._doc
+                        ...getProduct
                     }
                 })
             } else {
