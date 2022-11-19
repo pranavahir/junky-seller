@@ -20,19 +20,19 @@ ProductRoutes.post('/server/updateproduct', productController.updateproduct)
 
 ProductRoutes.post('/server/singleproduct', productController.singleproduct)
 
-ProductRoutes.get('/server/getproducts', productController.getproducts)
+ProductRoutes.post('/server/getproducts', productController.getproducts)
 
-ProductRoutes.get('/server/searchsingleproduct', productController.searchsingleproduct)
+ProductRoutes.post('/server/searchsingleproduct', productController.searchsingleproduct)
 
 
-ProductRoutes.get('/server/searchproducts', productController.searchproducts)
+ProductRoutes.post('/server/searchproducts', productController.searchproducts)
 
-ProductRoutes.get('/server/fetchproductinformation', productController.fetchproductinformation)
+ProductRoutes.post('/server/fetchproductinformation', productController.fetchproductinformation)
 ProductRoutes.post('/server/listofproducts', productController.listofproducts)
-ProductRoutes.get('/fetchproductinformation', productController.fetchproductinformation)
-ProductRoutes.get('/listofproducts', productController.listofproducts)
-ProductRoutes.get('/metalprice', productController.metalprice)
-ProductRoutes.get('/recentlyaddedproducts', productController.recentlyaddedproducts)
+ProductRoutes.post('/fetchproductinformation', productController.fetchproductinformation)
+ProductRoutes.post('/listofproducts', productController.listofproducts)
+ProductRoutes.post('/metalprice', productController.metalprice)
+ProductRoutes.post('/recentlyaddedproducts', productController.recentlyaddedproducts)
 
 
 

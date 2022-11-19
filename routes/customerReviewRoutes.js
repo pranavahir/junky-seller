@@ -8,5 +8,5 @@ const ObjectId = mongoose.Types.ObjectId
 
 
 customerReviewRoutes.post('/storecustomerreview', reviewController.storecustomerreview)
-customerReviewRoutes.get('/fetchproductreview', reviewController.fetchproductreview)
+customerReviewRoutes.post('/fetchproductreview', reviewController.fetchproductreview)
 module.exports = customerReviewRoutes;

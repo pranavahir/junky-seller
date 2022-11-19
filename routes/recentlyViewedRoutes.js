@@ -9,7 +9,7 @@ const { isNullorUndefinedorEmpty, fetchFromReferenceNumber } = require('../utili
 
 RecentlyViewedRoutes.post('/recentlyviewedproduct', RecentlyViewedController.recentlyviewedproduct)
 
-RecentlyViewedRoutes.get('/fetchrecentlyviewed', RecentlyViewedController.fetchrecentlyviewed)
+RecentlyViewedRoutes.post('/fetchrecentlyviewed', RecentlyViewedController.fetchrecentlyviewed)
 
 
 module.exports = RecentlyViewedRoutes;
