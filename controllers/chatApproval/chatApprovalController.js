@@ -133,7 +133,7 @@ async function updateisapproved(req,res){
 
 async function approvedchats(req,res){
     try{
-        const findapprovedchat = ChatApproval.aggregate({
+        const findapprovedchat = await ChatApproval.aggregate({
             $match:{
                 isapproved:true
             }
