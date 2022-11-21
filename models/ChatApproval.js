@@ -16,7 +16,7 @@ const ChatApprovalSchema = new Schema({
         default:"close"
     },
     approvedBy:{
-        type:String,
+        type:ObjectId,
         default:null
     },
     isapproved:{
