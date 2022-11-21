@@ -5,7 +5,7 @@ const { isNullorUndefinedorEmpty } = require("../../utility/util")
 async function updatestatus(req,res){
     try{
         if(isNullorUndefinedorEmpty(req.body.chatapprovalid) && isNullorUndefinedorEmpty(req.body.status)){
-            const findChat = ChatApproval.findOne({_id:req.body.chatapprovalid}).lean()
+            const findChat = await ChatApproval.findOne({_id:req.body.chatapprovalid}).lean()
             if(findChat !== null){
                 const updateChat = ChatApproval.updateOne(
                     {_id:req.body.chatapprovalid},
@@ -15,7 +15,7 @@ async function updatestatus(req,res){
                         }
                     }
                 )
-                const getChat = ChatApproval.findOne({_id:req.body.chatapprovalid}).lean()
+                const getChat = await ChatApproval.findOne({_id:req.body.chatapprovalid}).lean()
                 res.json({
                     error:null,
                     data:{
@@ -48,7 +48,7 @@ async function updatestatus(req,res){
 async function updateapprovedby(req,res){
     try{
         if(isNullorUndefinedorEmpty(req.body.chatapprovalid) && isNullorUndefinedorEmpty(req.body.approvedby)){
-            const findChat = ChatApproval.findOne({_id:req.body.chatapprovalid}).lean()
+            const findChat = await ChatApproval.findOne({_id:req.body.chatapprovalid}).lean()
             if(findChat !== null){
                 const updateChat = ChatApproval.updateOne(
                     {_id:req.body.chatapprovalid},
@@ -58,7 +58,7 @@ async function updateapprovedby(req,res){
                         }
                     }
                 )
-                const getChat = ChatApproval.findOne({_id:req.body.chatapprovalid}).lean()
+                const getChat = await ChatApproval.findOne({_id:req.body.chatapprovalid}).lean()
                 res.json({
                     error:null,
                     data:{
@@ -91,7 +91,7 @@ async function updateapprovedby(req,res){
 async function updateisapproved(req,res){
     try{
         if(isNullorUndefinedorEmpty(req.body.chatapprovalid) && isNullorUndefinedorEmpty(req.body.isapproved)){
-            const findChat = ChatApproval.findOne({_id:req.body.chatapprovalid}).lean()
+            const findChat = await ChatApproval.findOne({_id:req.body.chatapprovalid}).lean()
             if(findChat !== null){
                 const updateChat = ChatApproval.updateOne(
                     {_id:req.body.chatapprovalid},
@@ -101,7 +101,7 @@ async function updateisapproved(req,res){
                         }
                     }
                 )
-                const getChat = ChatApproval.findOne({_id:req.body.chatapprovalid}).lean()
+                const getChat = await ChatApproval.findOne({_id:req.body.chatapprovalid}).lean()
                 res.json({
                     error:null,
                     data:{
