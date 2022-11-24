@@ -17,6 +17,7 @@ const QuestionandanswerRoutes = require('./routes/questionandanswerRoutes')
 const StoreReportRoutes = require('./routes/storereportRoutes')
 const ConversationRoutes = require('./routes/conversationRoutes')
 const ChatApprovalRoutes = require('./routes/chatApprovalRoutes')
+const AuthRoutes = require('./routes/authRoutes')
 mongoose.connect(keys.URI, { useNewUrlParser: true, useUnifiedTopology: true }, (error) => {
     if (error) {
         throw error
@@ -39,7 +40,7 @@ app.use('/', QuestionandanswerRoutes);
 app.use('/', StoreReportRoutes);
 app.use('/',ConversationRoutes)
 app.use('/',ChatApprovalRoutes)
-
+app.use('/',AuthRoutes)
 app.listen(PORT, () => {
     console.log(`Server is Running on http://localhost:${PORT}`)
 })

@@ -39,6 +39,15 @@ const UserSchema = new Schema({
     isSeller:{
         type:Boolean,
         default:false
+    },
+    hash:{
+        type:String
+    },
+    password:{
+        type:String
+    },
+    gst:{
+        type:String
     }
 },{timestamps:true})
 
