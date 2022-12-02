@@ -229,17 +229,17 @@ async function singleproduct(req, res) {
             },
             {$unwind:"$User"}
         ])
-            if (getproduct.length !== 0 && getproduct[0].isactive === true && isNullorUndefinedorEmpty(req.body.tocountry)) {
-                const findCountry = await Conversation.findOne({ country: req.body.tocountry }).lean()
-                const findCountry1 = await Conversation.findOne({country:getproduct[0].country}).lean()
+            if (getproduct.length !== 0 && getproduct[0].isactive === true ) {
+                // const findCountry = await Conversation.findOne({ country: req.body.tocountry }).lean()
+                // const findCountry1 = await Conversation.findOne({country:getproduct[0].country}).lean()
                 // const x = await Conversation.findOne({country:"Hungary"})
                 // console.log(x);
                 // console.log(getproduct)
                 // console.log(getproduct[0].country,req.body.tocountry);
                 // console.log(findCountry,findCountry1)
-                if(findCountry !== null){
-                    getproduct[0].price = (getproduct[0].price / findCountry1.currencyvalue) * findCountry.currencyvalue
-                }
+                // if(findCountry !== null){
+                //     getproduct[0].price = (getproduct[0].price / findCountry1.currencyvalue) * findCountry.currencyvalue
+                // }
                 res.json({
                     error: null,
                     data: {
@@ -438,7 +438,7 @@ async function listofproducts(req, res) {
                 { $skip: (page - 1) * perpage },
                 { $limit: perpage }
             ])
-            console.log(searchResult)
+            // console.log(searchResult)
             if (searchResult !== null) {
                 res.json({
                     error: null,

@@ -71,7 +71,7 @@ const register = async(req,res) => {
         }
         const password = await bcrypt.hash(req.body.password, 12)
         if (getuser !== null) {
-            const updatepassword = await User.updateOne({email:req.body.email},{$set:{password:password}})
+            const updatepassword = await User.updateOne({email:req.body.email},{$set:{password:password,isSeller:req.body.isSeller === true?true:getuser.isSeller,isBuyer:req.body.isBuyer === true?true:getuser.isBuyer}})
            return res.json({
                 error: null,
                 message:"Password Updated Successfully",
@@ -127,8 +127,17 @@ const register = async(req,res) => {
 }
 const login = async(req,res) => {
     try{
-        if(isNullorUndefinedorEmpty(req.body.email) && isNullorUndefinedorEmpty(req.body.password)){
-            const getuser = await User.findOne({email:req.body.email})
+        if(isNullorUndefinedorEmpty(req.body.email) && isNullorUndefinedorEmpty(req.body.password) && (req.body.isBuyer !== null && req.body.isBuyer !== undefined && req.body.isBuyer === true || req.body.isSeller !== null && req.body.isSeller !== undefined && req.body.isSeller === true)){
+            let UserObj = {}
+            UserObj.email = req.body.email
+            if(req.body.isBuyer){
+                UserObj.isBuyer = req.body.isBuyer  
+            }
+            if(req.body.isSeller){
+                UserObj.isSeller = req.body.isSeller  
+            }
+            console.log(UserObj,"UserObj")
+            const getuser = await User.findOne(UserObj)
             if(getuser !== null){
                 const comparepassword = await bcrypt.compare(req.body.password,getuser.password)
                 if(!comparepassword){
